@@ -35,23 +35,15 @@ zogl.zPolygon.prototype.clone = function() {
         'vcount':       this.drawData.vcount || 0,
     };
 
-    copy.x = this.x; copy.y = this.y;
+    copy.x      = this.x;
+    copy.y      = this.y;
     copy.shader = this.shader;
-    copy.texture = this.texture;
-    copy.verts = new Array(this.verts);
-    copy.color = new zogl.color4(this.color);
+    copy.texture= this.texture;
+    copy.verts  = this.verts.slice(0);
+    copy.color  = new zogl.color4(this.color);
     copy.offset = 0;
 
-    if (this.internal) {
-        copy.internal   = true;
-        copy.vao        = new zogl.zBufferSet();
-        copy.offset     = copy.vao.addData(copy.drawData);
-        copy.internal   = true;
-        copy.mv         = mat4.create();
-
-        mat4.identity(copy.mv);
-        mat4.translate(copy.mv, [copy.x, copy.y, 0]);
-    }
+    mat4.translate(copy.mv, [copy.x, copy.y, 0]);
 
     return copy;
 };
