@@ -107,20 +107,19 @@ zogl.zPolygon.prototype.create = function() {
 zogl.zPolygon.prototype.draw = function(ready) {
     var ready = ready || false;
 
-    if (this.vao === null && !ready) {
-        this.vao = new zogl.zBufferSet();
-        this.offset = this.vao.addData(this.drawData);
-        this.internal = true;
-    }
-
     if (!ready) {
+        if (this.vao === null) {
+            this.vao = new zogl.zBufferSet();
+            this.offset = this.vao.addData(this.drawData);
+            this.vao.offload();
+            this.internal = true;
+        }
+
         this.vao.bind();
         this.prepareMaterial();
         this.shader.setParameter("mv", this.mv);
         this.shader.setParameter("proj", glGlobals.proj);
     }
-
-    log(this.drawData.offset);
 
     mat4.identity(this.mv);
     mat4.translate(this.mv, [this.x, this.y, 0]);
@@ -147,11 +146,10 @@ zogl.zPolygon.prototype.offload = function(vao, flags) {
         return;
     }
 
-    var i = vao.addData(this.drawData);
-    if (flags !== undefined && !flags.preserve) {
-        this.drawData.icount = this.drawData.indices.length;
-        this.drawData.vcount = this.drawData.positions.length;
+    this.offset = vao.addData(this.drawData);
+    this.vao = vao;
 
+    if (flags && !flags.preserve) {
         delete this.drawData.positions;
         delete this.drawData.indices;
         delete this.drawData.colors;
@@ -159,9 +157,6 @@ zogl.zPolygon.prototype.offload = function(vao, flags) {
 
         this.drawData.positions = this.drawData.indices =
         this.drawData.colors    = this.drawData.texcoords = [];
-
-        this.offset = i;
-        this.vao = vao;
     }
 };
 

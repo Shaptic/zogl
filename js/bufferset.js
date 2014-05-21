@@ -10,7 +10,7 @@ zogl.zBufferSet.prototype.addData = function(data) {
     this.addIndices(data.indices);
     this.addColors(data.colors);
     this.addTexCoords(data.texcoords);
-    return this.buffers.positions.size - data.positions.length;
+    return this.buffers.positions.size;
 }
 
 zogl.zBufferSet.prototype.addPositions = function(data) {
@@ -69,6 +69,7 @@ zogl.zBufferSet.prototype.unbind = function() {
 
 zogl.zBufferSet.prototype.draw = function() {
     for (var i in this.buffers) {
+        this.buffers[i].offload();
         this.buffers[i].prepare();
     }
 
@@ -82,4 +83,10 @@ zogl.zBufferSet.prototype.draw = function() {
     }
 
     this.unbind();
+};
+
+zogl.zBufferSet.prototype.offload = function() {
+    for (var i in this.buffers) {
+        this.buffers[i].offload();
+    }
 };

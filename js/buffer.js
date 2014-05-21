@@ -1,20 +1,53 @@
 zogl = zogl || {};
 
-zogl.zBuffer = function(buffertype, drawtype) {
+zogl.zBuffer = function(buffertype, drawtype, type) {
     this.bufferType = buffertype;
     this.drawType   = drawtype || gl.STATIC_DRAW;
     this.attribute  = null;
     this.size       = 0;
     this.itemSize   = 0;
-
-    this.buffer = gl.createBuffer();
+    this.dataType   = type || Float32Array;
+    this.data       = null;
+    this.buffer     = gl.createBuffer();
 };
 
+
 zogl.zBuffer.prototype.addData = function(bufferdata, eachElem) {
-    this.bind();
-    gl.bufferData(this.bufferType, bufferdata, this.drawType);
-    this.size = bufferdata.length;
+    if (this.size) {
+        throw('.offload() has been called, you can no longer add data to this buffer.')
+        return false;
+    }
+
+    // we are adding data
+    if (this.data) {
+        var copy = new this.dataType(this.data.length + bufferdata.length);
+
+        for (var i in this.data) {
+            copy[i] = this.data[i];
+        }
+
+        for(var i in bufferdata) {
+            copy[i + this.data.length] = bufferdata[i];
+        }
+
+        this.data = copy;
+
+    // first batch of data
+    } else {
+        this.data = bufferdata;
+    }
+
     this.itemSize = eachElem;
+    return this.data.length;
+};
+
+zogl.zBuffer.prototype.offload = function() {
+    if (!this.data || !this.data.length) return;
+
+    this.bind();
+    gl.bufferData(this.bufferType, this.data, this.drawType);
+    this.size = this.data.length;
+    this.data = null;
     this.unbind();
 };
 
