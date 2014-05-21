@@ -108,6 +108,16 @@ function log() {
     }
 }
 
+zogl.onGLError = function(err, funcName, args) {
+    var str = "";
+    for (var i in args) {
+        str += args[i] + ", ";
+    }
+
+    log('An error occured calling "gl.' + funcName +
+        "(" + str.slice(0, -2) + ')": ' + err);
+};
+
 /*
  * @param   canvas  The canvas object for which we will create a WebGL context
  * @return  `true`  if a WebGL context could be created,
@@ -116,8 +126,13 @@ function log() {
 zogl.init = function(canvas) {
     try {
         gl = canvas.getContext("experimental-webgl");
+
+        if (zogl.debug) {
+            gl = WebGLDebugUtils.makeDebugContext(gl, zogl.onGLError);
+        }
     } catch (e) {
     }
+
     if (!gl) {
         alert('WebGL is not supported!');
         return false;
@@ -135,7 +150,7 @@ zogl.init = function(canvas) {
     mat4.ortho(0, canvas.width, canvas.height, 0, 1.0, 10.0, glGlobals.proj);
 
     return true;
-}
+};
 
 zogl.loadScript = function(filename, callback) {
     var node    = document.createElement("script");
@@ -143,4 +158,4 @@ zogl.loadScript = function(filename, callback) {
     node.src    = "js/" + filename;
     node.onload = callback;
     document.getElementsByTagName('head')[0].appendChild(node);
-}
+};
