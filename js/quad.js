@@ -102,6 +102,6 @@ zogl.zQuad.prototype.offload = function(vao, flags) {
     return this.poly.offload(vao, flags);
 };
 
-zogl.zQuad.prototype.prepare = function() {
-    this.poly.prepare();
+zogl.zQuad.prototype.prepareMaterial = function() {
+    this.poly.prepareMaterial();
 };
