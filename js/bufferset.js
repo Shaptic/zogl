@@ -10,7 +10,7 @@ zogl.zBufferSet.prototype.addData = function(data) {
     this.addIndices(data.indices);
     this.addColors(data.colors);
     this.addTexCoords(data.texcoords);
-    return this.buffers.positions.size - data.length;
+    return this.buffers.positions.size - data.positions.length;
 }
 
 zogl.zBufferSet.prototype.addPositions = function(data) {
@@ -75,7 +75,7 @@ zogl.zBufferSet.prototype.draw = function() {
     if ('posIndex' in this.buffers) {
         gl.drawElements(gl.TRIANGLES, this.buffers.posIndex.size,
                         gl.UNSIGNED_SHORT, 0);
-        
+
     } else if ('positions' in this.buffers) {
         gl.drawArrays(gl.TRIANGLES, 0, this.buffers.positions.size /
                                        this.buffers.positions.numItems);
