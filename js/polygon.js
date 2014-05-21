@@ -115,8 +115,7 @@ zogl.zPolygon.prototype.draw = function(ready) {
 
     if (!ready) {
         this.vao.bind();
-        this.texture.bind();
-        this.shader.bind();
+        this.prepareMaterial();
         this.shader.setParameter("mv", this.mv);
         this.shader.setParameter("proj", glGlobals.proj);
     }
@@ -166,7 +165,7 @@ zogl.zPolygon.prototype.offload = function(vao, flags) {
     }
 };
 
-zogl.zPolygon.prototype.prepare = function() {
+zogl.zPolygon.prototype.prepareMaterial = function() {
     this.shader.bind();
     this.texture.bind();
 };

@@ -55,7 +55,9 @@ zogl.zSprite.prototype.draw = function(ready) {
         this.prims[i].move(this.position[0] + pos[0],
                            this.position[1] + pos[1]);
 
-        if (ready) { this.prims[i].prepare(); }
+        if (ready) {
+            this.prims[i].prepareMaterial();
+        }
 
         this.prims[i].draw(ready);
         this.prims[i].move(pos[0], pos[1]);
