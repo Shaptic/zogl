@@ -35,10 +35,19 @@ zogl.zScene.prototype.draw = function(color) {
 
     for (var i in this.objects) {
         this.objects[i].offload(this.geometryVAO, { 'preserve': false });
+    }
 
-        this.geometryVAO.bind();
+    this.geometryVAO.offload();
+    this.geometryVAO.bind();
+    for (var i in this.objects) {
         this.objects[i].draw(true);
     }
 
     this.geometryVAO.unbind();
+};
+
+zogl.zScene.prototype.addObject = function() {
+    var z = new zogl.zSprite();
+    this.objects.push(z);
+    return z;
 };
