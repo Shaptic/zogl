@@ -2,6 +2,7 @@ import os
 
 minified = open('zogl.min.js', 'w');
 files = [
+    'debug.js',
     'glMatrix-0.9.5.min.js',
     'zogl.js',
     'shaders.js',
