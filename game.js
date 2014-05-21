@@ -44,7 +44,7 @@ function init() {
     poly.move(150, 100);
 
     var f = new zogl.zFont();
-    f.loadFromFile('monospace', 48);
+    f.loadFromFile("monospace", 48);
     var tx = f.draw("help");
 
     var q = new zogl.zQuad();
@@ -62,7 +62,8 @@ function init() {
     mat4.translate(glGlobals.mv, [0, 100, 0]);
 
     var scene = new zogl.zScene();
-    //scene.objects.push(sp);
+    var sceneSprite = scene.addObject();
+    f.drawOnSprite("lel", sceneSprite);
 
     var game = function() {
         w.clear('#FFFFFF');
@@ -74,11 +75,13 @@ function init() {
         vbo.draw();
 
         poly.draw();
+
         q.draw();
-
-        //scene.draw();
-
         sp.draw();
+        scene.draw();
+        sceneSprite.move(200, 200);
+        sceneSprite.draw();
+
         requestAnimationFrame(game);
     };
 
@@ -86,6 +89,7 @@ function init() {
 }
 
 window.onload = function() {
+    zogl.debug = true;
     zogl.init(document.getElementById('webgl-canvas'));
     init();
 };
