@@ -113,30 +113,7 @@ function log() {
  * @return  `true`  if a WebGL context could be created,
  *          `false` otherwise.
  */
-zogl.init = function(canvas, callback) {
-    // Load the entire API. Because fuck you. And fuck grunt.
-    zogl.loadScript("shaders.js", function() {
-        zogl.loadScript("texture.js", function() {
-            zogl.loadScript("window.js", function() {
-                zogl.loadScript("shader.js", function() {
-                    zogl.loadScript("buffer.js", function() {
-                        zogl.loadScript("polygon.js", function() {
-                            zogl.loadScript("quad.js", function() {
-                                zogl.loadScript("sprite.js", function() {
-                                    zogl.loadScript("font.js", function() {
-                                        zogl.loadScript("scene.js", function() {
-                                            zogl.loadScript("bufferset.js", callback);
-                                        })
-                                    })
-                                })
-                            })
-                        })
-                    })
-                })
-            })
-        })
-    });
-
+zogl.init = function(canvas) {
     try {
         gl = canvas.getContext("experimental-webgl");
     } catch (e) {
@@ -163,7 +140,7 @@ zogl.init = function(canvas, callback) {
 zogl.loadScript = function(filename, callback) {
     var node    = document.createElement("script");
     node.type   = "text/javascript";
-    node.src    = filename;
+    node.src    = "js/" + filename;
     node.onload = callback;
     document.getElementsByTagName('head')[0].appendChild(node);
 }

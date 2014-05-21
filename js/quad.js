@@ -36,6 +36,9 @@ zogl.zQuad.prototype.create = function() {
     this.poly.drawData.indices = new Uint16Array([
         0, 1, 3, 3, 1, 2
     ]);
+
+    this.poly.drawData.icount = 6;
+    this.poly.drawData.vcount = this.poly.drawData.positions.length;
 };
 
 zogl.zQuad.prototype.resize = function(w, h) {

@@ -4,6 +4,7 @@ zogl.zPolygon = function() {
     this.vao = null;
     this.internal = false;
     this.mv = mat4.create();
+    mat4.identity(this.mv);
 
     this.drawData = {
         'positions':    [],
@@ -39,6 +40,7 @@ zogl.zPolygon.prototype.clone = function() {
     copy.texture = this.texture;
     copy.verts = new Array(this.verts);
     copy.color = new zogl.color4(this.color);
+    copy.offset = 0;
 
     if (this.internal) {
         copy.internal   = true;
@@ -118,6 +120,8 @@ zogl.zPolygon.prototype.draw = function(ready) {
         this.shader.setParameter("mv", this.mv);
         this.shader.setParameter("proj", glGlobals.proj);
     }
+
+    log(this.drawData.offset);
 
     mat4.identity(this.mv);
     mat4.translate(this.mv, [this.x, this.y, 0]);

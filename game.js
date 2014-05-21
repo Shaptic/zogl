@@ -43,7 +43,7 @@ function init() {
     poly.create();
     poly.move(150, 100);
 
-    var f = new zogl.zFont;
+    var f = new zogl.zFont();
     f.loadFromFile('monospace', 48);
     var tx = f.draw("help");
 
@@ -86,5 +86,6 @@ function init() {
 }
 
 window.onload = function() {
-    zogl.init(document.getElementById('webgl-canvas'), init);
+    zogl.init(document.getElementById('webgl-canvas'));
+    init();
 };
