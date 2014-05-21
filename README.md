@@ -1,4 +1,4 @@
-= zogl =
+# zogl
 
 This is a minimalistic 2D, WebGL rendering framework. The architecture is
 similar to that of another one of my GL projects, [Zenderer](https://github.com/Shaptic/Zenderer).
@@ -12,4 +12,12 @@ Limitations include:
 
 - No GUI framework           (unnecessary)
 - No VAO support             (emulated)
-- No proper asset management (a possible TODO)
+- No proper asset management (a possible **TODO**)
+
+## Features
+
+- Multi-faceted rendering API -- go as low level as you want
+- `sprite` class to handle generic game entity use-cases
+- Simple collision detection for all kinds of shapes            **TODO**
+- Pixel-perfect lighting                                        **TODO**
+- Fast object transformations via the [glmatrix library](https://code.google.com/p/glmatrix/wiki/Usage)
