@@ -15,6 +15,7 @@ files = [
     'quad.js',
     'sprite.js',
     'font.js',
+    'rendertarget.js',
     'scene.js'
 ]
 

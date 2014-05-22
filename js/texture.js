@@ -41,8 +41,9 @@ zogl.zTexture.prototype.loadFromRaw = function(data, flip_y, w, h) {
     }
 
     if (w && h) {
+        if (data instanceof Array) data = new Uint8Array(data);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA,
-                      gl.UNSIGNED_BYTE, new Uint8Array(data));
+                      gl.UNSIGNED_BYTE, data);
         this.size.w = w; this.size.h = h;
 
     } else {
