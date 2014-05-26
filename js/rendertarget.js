@@ -1,7 +1,7 @@
 zogl.zRenderTarget = function(w, h) {
     this.fbo = gl.createFramebuffer();
-    this.rbo = null;
-    this.texture = null;
+    this.rbo = gl.createRenderbuffer();
+    this.texture = new zogl.zTexture();
 
     this.size = {
         'w': w || glGlobals.activeWindow.size.w,
@@ -10,14 +10,9 @@ zogl.zRenderTarget = function(w, h) {
 
     this.proj = mat4.create();
     mat4.ortho(0, w, h, 0, 1.0, 10.0, this.proj);
-};
 
-zogl.zRenderTarget.prototype.init = function() {
     this.bind();
-
-    this.rbo = gl.createRenderbuffer();
-
-    this.texture = new zogl.zTexture();
+    
     this.texture.loadFromRaw(null, false, this.size.w, this.size.h);
     this.texture.bind();
 
