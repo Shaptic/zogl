@@ -65,6 +65,9 @@ function init() {
     var sceneSprite = scene.addObject();
     f.drawOnSprite("lel", sceneSprite);
 
+    var rt = new zogl.zRenderTarget();
+    rt.init();
+
     var game = function() {
         w.clear('#FFFFFF');
 
@@ -78,10 +81,16 @@ function init() {
 
         q.draw();
         sp.draw();
-        scene.draw();
-        sceneSprite.move(200, 200);
-        sceneSprite.draw();
 
+        rt.bind();
+        scene.draw();
+        rt.unbind();
+
+        var rtQuad = new zogl.zQuad();
+        rtQuad.attachTexture(rt.texture);
+        rtQuad.create();
+        rtQuad.draw();
+        
         requestAnimationFrame(game);
     };
 
