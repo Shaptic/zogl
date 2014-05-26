@@ -76,6 +76,9 @@ zogl.zQuad.prototype.draw = function(arg) {
 zogl.zQuad.prototype.attachTexture = function(texture) {
     this.poly.texture = texture
     this.setColor('#FFFFFF');
+    if (!this.size.w || !this.size.h) {
+        this.resize(texture.size.w, texture.size.h);
+    }
 };
 
 zogl.zQuad.prototype.attachShader = function(shader) {
