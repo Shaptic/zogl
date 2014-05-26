@@ -32,8 +32,8 @@ zogl.zWindow.prototype.refresh = function() {
     delete glGlobals.defaultTexture;
 
     s = new zogl.zShader();
-    s.loadFromString(zogl.SHADERS.defaultvs.join('\n'),
-                     zogl.SHADERS.defaultfs.join('\n'));
+    s.loadFromString(zogl.SHADERS.defaultvs,
+                     zogl.SHADERS.defaultfs);
 
     s.bind();
     s.setParameter("proj", glGlobals.proj);
