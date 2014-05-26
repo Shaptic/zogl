@@ -16,6 +16,7 @@ files = [
     'sprite.js',
     'font.js',
     'rendertarget.js',
+    'light.js',
     'scene.js'
 ]
 
