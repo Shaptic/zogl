@@ -3,6 +3,7 @@ zogl.zWindow = function(w, h) {
         'w': w || gl.viewportWidth,
         'h': h || gl.viewportHeight
     };
+    this.proj = mat4.create();
 }
 
 zogl.zWindow.prototype.init = function() {
@@ -20,7 +21,8 @@ zogl.zWindow.prototype.resize = function(w, h) {
     gl.viewportHeight = h;
 
     gl.viewport(0, 0, w, h);
-    mat4.ortho(0, w, h, 0, 1.0, 10.0, glGlobals.proj);
+    mat4.ortho(0, w, h, 0, 1.0, 10.0, this.proj);
+    glGlobals.proj = this.proj;
 
     this.refresh();
 };
