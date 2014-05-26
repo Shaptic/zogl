@@ -8,7 +8,15 @@ function sum(list) {
         s += parseFloat(list[i]);
     }
     return s;
-}
+};
+
+zogl.rad = function(deg) {
+    return deg * Math.PI / 180.0;
+};
+
+zogl.deg = function(rad) {
+    return rad * 180.0 / Math.PI;
+};
 
 /**
  * Accepts lots of formats for color values:
@@ -27,7 +35,7 @@ zogl.color4.prototype.asHex = function() {
         (this.r * 255) << 24 ^
         (this.g * 255) << 16 ^
         (this.b * 255) << 8  ^
-        (this.a * 255) << 0
+        (this.a * 255)
     ).toString(16);
 };
 
@@ -41,12 +49,12 @@ zogl.color4.prototype.asRGBA = function() {
 }
 
 zogl.color4.prototype.asGL = function() {
-    return [
+    return new Float32Array([
         this.r,
         this.g,
         this.b,
         this.a
-    ];
+    ]);
 };
 
 zogl.color4.prototype.set = function() {
