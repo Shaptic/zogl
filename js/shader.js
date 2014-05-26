@@ -92,8 +92,9 @@ zogl.zShader.prototype.loadFromID = function(id, type) {
     return this.loadFromStr(str, type);
 };
 
-zogl.zShader.prototype.setParameter = function(name, value) {
-    gl.uniformMatrix4fv(this.getParameterLocation(name), false, value);
+zogl.zShader.prototype.setParameter = function(name, value, fn) {
+    fn = fn || gl.uniformMatrix4fv;
+    fn(this.getParameterLocation(name), false, value);
 };
 
 zogl.zShader.prototype.setTexture = function(name, id) {
