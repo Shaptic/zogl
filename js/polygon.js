@@ -109,13 +109,13 @@ zogl.zPolygon.prototype.draw = function(ready) {
 
         this.vao.bind();
         this.prepareMaterial();
-        this.shader.setParameter("mv", this.mv);
-        this.shader.setParameter("proj", glGlobals.proj);
+        this.shader.setParameterMat("mv", this.mv);
+        this.shader.setParameterMat("proj", glGlobals.proj);
     }
 
     mat4.identity(this.mv);
     mat4.translate(this.mv, [this.x, this.y, 0]);
-    glGlobals.activeShader.setParameter("mv", this.mv);
+    glGlobals.activeShader.setParameterMat("mv", this.mv);
 
     gl.drawElements(gl.TRIANGLES, this.drawData.icount,
                     gl.UNSIGNED_SHORT, this.offset);

@@ -36,8 +36,8 @@ zogl.zWindow.prototype.refresh = function() {
                      zogl.SHADERS.defaultfs);
 
     s.bind();
-    s.setParameter("proj", glGlobals.proj);
-    s.setParameter("mv", glGlobals.mv);
+    s.setParameterMat("proj", glGlobals.proj);
+    s.setParameterMat("mv", glGlobals.mv);
 
     t = new zogl.zTexture();
     t.loadFromRaw([255, 255, 255, 255], false, 1, 1);
