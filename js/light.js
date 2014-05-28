@@ -11,7 +11,7 @@ zogl.DefaultLightingConfig = {
     'max_angle':     45.0,
     'min_angle':    -45.0,
     'color':        new zogl.color4('#FFFFFF').asGL(),
-    'position':     new Float32Array([0.0, 0.0, 0.0])
+    'position':     new Float32Array([0.0, 0.0])
 };
 
 zogl.zLight = function(type, config) {
@@ -19,12 +19,12 @@ zogl.zLight = function(type, config) {
 
     this.type = type || zogl.LightType.AMBIENT;
     this.config = {
-        'brightness':   config.brightness || zogl.DefaultLightingConfig.brightness,
-        'attenuation':  config.brightness || zogl.DefaultLightingConfig.attenuation,
-        'position':     config.brightness || zogl.DefaultLightingConfig.position,
-        'color':        config.brightness || zogl.DefaultLightingConfig.color,
-        'max_angle':    config.brightness || zogl.DefaultLightingConfig.max_angle,
-        'min_angle':    config.brightness || zogl.DefaultLightingConfig.min_angle
+        'brightness':   config.brightness   || zogl.DefaultLightingConfig.brightness,
+        'attenuation':  config.attenuation  || zogl.DefaultLightingConfig.attenuation,
+        'position':     config.position     || zogl.DefaultLightingConfig.position,
+        'color':        config.color        || zogl.DefaultLightingConfig.color,
+        'max_angle':    config.max_angle    || zogl.DefaultLightingConfig.max_angle,
+        'min_angle':    config.min_angle    || zogl.DefaultLightingConfig.min_angle
     };
 
     var fragstr = zogl.SHADERS.defaultfs;
@@ -41,7 +41,9 @@ zogl.zLight = function(type, config) {
 
     this.shader = new zogl.zShader();
     this.shader.loadFromString(zogl.SHADERS.defaultvs, fragstr);
-    this.update();
+    log(this.shader.errorstr);
+
+    this.update();    
 };
 
 zogl.zLight.prototype.setBrightness = function(brightness) {
@@ -57,7 +59,7 @@ zogl.zLight.prototype.setAttenuation = function(constant, linear, quadratic) {
 };
 
 zogl.zLight.prototype.setPosition = function(x, y) {
-    this.config.position = new Float32Array([x, y, 1]);
+    this.config.position = new Float32Array([x, y]);
 };
 
 // TODO: Vector rotation not just value setting.
@@ -72,15 +74,14 @@ zogl.zLight.prototype.setMinAngle = function(degrees) {
 
 zogl.zLight.prototype.update = function() {
     this.enable();
-    this.shader.setParameter('light_col', this.config.color,        gl.uniform3fv);
-    this.shader.setParameter('light_pos', this.config.position,     gl.uniform3fv);
-    this.shader.setParameter('light_att', this.config.attenuation,  gl.uniform3fv);
-    this.shader.setParameter('light_brt', this.config.brightness,   gl.uniform1fv);
-    this.shader.setParameter('light_max', this.config.max_angle,    gl.uniform1fv);
-    this.shader.setParameter('light_min', this.config.min_angle,    gl.uniform1fv);
-
-    this.shader.setParameter('scr_height', glGlobals.activeWindow.size.h,
-                             gl.uniform1iv);
+    log(this.config);
+    this.shader.setParameterFl('light_col', this.config.color);
+    this.shader.setParameterFl('light_pos', this.config.position);
+    this.shader.setParameterFl('light_att', this.config.attenuation);
+    this.shader.setParameterFl('light_brt', this.config.brightness);
+    this.shader.setParameterFl('light_max', this.config.max_angle);
+    this.shader.setParameterFl('light_min', this.config.min_angle);
+    this.shader.setParameterInt('scr_height', glGlobals.activeWindow.size.h);
 
     this.disable();
 };

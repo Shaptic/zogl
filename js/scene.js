@@ -14,10 +14,17 @@ zogl.zScene = function(w, h, options) {
     this.postfx  = [];
     this.objects = [];
 
-    this.fullscreen = new zogl.zQuad(this.size.w, this.size.h);
-    this.fullscreen.attachTexture(this.fbo1.texture);
-    this.fullscreen.create();
-    //this.fullscreen.offload(this.geometryVAO, { 'preserve': false });
+    this.fullscreen = new zogl.zBufferSet();
+    this.fullscreen.addPositions(new Float32Array([
+        0,              0,
+        this.size.w,    0,
+        this.size.w,    this.size.h,
+        0,              this.size.h
+    ]));
+    this.fullscreen.addIndices(new Uint16Array([
+        0, 1, 3, 3, 1, 2
+    ]));
+    this.fullscreen.offload();
 
     this.flags = {
         'lighting':         options.lighting        || false,
@@ -27,7 +34,7 @@ zogl.zScene = function(w, h, options) {
 };
 
 zogl.zScene.prototype.draw = function(color) {
-    var color = color || new zogl.color4('#FFFFFF');
+    var color = color || new zogl.color4('#000000');
 
     if (this.flags.blendThrough) {
         color.a = 0.0;
@@ -35,6 +42,10 @@ zogl.zScene.prototype.draw = function(color) {
 
     gl.clearColor(color.r, color.g, color.b, color.a);
     gl.clear(gl.COLOR_BUFFER_BIT);
+
+    if (this.flags.lighting) {
+        gl.enable(gl.BLEND);
+    }
 
     for (var i in this.objects) {
         this.objects[i].offload(this.geometryVAO, { 'preserve': false });
@@ -46,8 +57,36 @@ zogl.zScene.prototype.draw = function(color) {
         this.objects[i].draw(true);
     }
 
+    var tx = this.fbo1.texture;
+
+    if (this.flags.lighting) {
+        this.fbo2.bind();
+        tx.bind();
+        gl.blendFunc(gl.ONE, gl.ONE);
+
+        for (var i in this.lights) {
+            this.lights[i].enable();
+            this.fullscreen.draw();
+            this.lights[i].disable();
+        }
+
+        tx = this.fbo2.texture;
+    }
+
     this.fbo1.unbind();
+
+    var id = mat4.create();
+    mat4.identity(id);
+
+    tx.bind();
+    glGlobals.defaultShader.bind();
+    glGlobals.defaultShader.setParameterMat("proj", this.fbo1.proj);
+    glGlobals.defaultShader.setParameterMat("mv",   id);
+    
     this.fullscreen.draw();
+
+    tx.unbind();
+    glGlobals.defaultShader.unbind();
 };
 
 zogl.zScene.prototype.addObject = function() {
@@ -59,5 +98,5 @@ zogl.zScene.prototype.addObject = function() {
 zogl.zScene.prototype.addLight = function(type) {
     var z = new zogl.zLight(type);
     this.lights.push(z);
-    return l;
+    return z;
 };
