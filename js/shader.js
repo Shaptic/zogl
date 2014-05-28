@@ -92,9 +92,53 @@ zogl.zShader.prototype.loadFromID = function(id, type) {
     return this.loadFromStr(str, type);
 };
 
-zogl.zShader.prototype.setParameter = function(name, value, fn) {
-    fn = fn || gl.uniformMatrix4fv;
-    fn(this.getParameterLocation(name), false, value);
+zogl.zShader.prototype.setParameterMat = function(name, value) {
+    gl.uniformMatrix4fv(this.getParameterLocation(name), false, value);
+};
+
+zogl.zShader.prototype.setParameterFl = function(name, values) {
+    var loc = this.getParameterLocation(name)
+    log('setting ' + name + ' to ' + values + '[' + values.length + ']');
+
+    if (values === parseFloat(values) || values.length == 1) {
+        gl.uniform1f(loc, values);
+        return;
+    }
+
+    var fn = null;
+    if (values.length == 2) {
+        fn = gl.uniform2fv;
+    } else if (values.length == 3) {
+        fn = gl.uniform3fv;        
+    } else if (values.length == 4) {
+        fn = gl.uniform4fv;
+    } else {
+        throw('invalid number of parameters');
+        return;
+    }
+
+    fn(loc, values);
+};
+
+zogl.zShader.prototype.setParameterInt = function(name, values) {
+    if (values === parseInt(values) || values.length == 1) {
+        gl.uniform1i(this.getParameterLocation(name), values);
+        return;
+    }
+
+    var fn = null;
+    if (values.length == 2) {
+        fn = gl.uniform2iv;
+    } else if (values.length == 3) {
+        fn = gl.uniform3iv;        
+    } else if (values.length == 4) {
+        fn = gl.uniform4iv;
+    } else {
+        throw('invalid number of parameters');
+        return;
+    }
+
+    fn(this.getParameterLocation(name), values);
 };
 
 zogl.zShader.prototype.setTexture = function(name, id) {
@@ -105,4 +149,9 @@ zogl.zShader.prototype.setTexture = function(name, id) {
 zogl.zShader.prototype.bind = function() {
     gl.useProgram(this.program);
     glGlobals.activeShader = this;
+}
+
+zogl.zShader.prototype.unbind = function() {
+    gl.useProgram(null);
+    glGlobals.activeShader = null;
 }
