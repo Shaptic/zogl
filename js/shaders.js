@@ -42,13 +42,13 @@ zogl.SHADERS = {
 
         'uniform int    scr_height;',
         'uniform float  light_brt;',
-        'uniform vec3   light_pos;',
+        'uniform vec2   light_pos;',
         'uniform vec3   light_att;',
-        'uniform vec3   light_col;',        
+        'uniform vec4   light_col;',        
 
         'void main(void) {',
             'vec2 pixel      = gl_FragCoord.xy;',
-            'pixel.y         = scr_height - pixel.y;',
+            'pixel.y         = float(scr_height) - pixel.y;',
 
             // Calculate distance to light from fragment.'
             'vec2 light_vec  = light_pos - pixel;',
@@ -60,9 +60,9 @@ zogl.SHADERS = {
                                     '( light_att.z * dist * dist));',
 
             // Final fragment color is the light color * attenuation * brightness.
-            'gl_FragColor    = texture2D(geometry, vs_texc);',
-            'gl_FragColor   *= vec4(light_col, 1.0) * vec4(att, att, att, 1.0);',
-            'gl_FragColor    = vs_color * vec4(gl_FragColor.rgb * light_brt, 1.0);',
+            'gl_FragColor    = texture2D(texture, vs_texc);',
+            'gl_FragColor   *= light_col * vec4(att, att, att, 1.0);',
+            'gl_FragColor    = vec4(1.0, 0.0, 0.0, 1.0);//vs_color * vec4(gl_FragColor.rgb * light_brt, 1.0);',
         '}'
     ].join('\n')
 };
