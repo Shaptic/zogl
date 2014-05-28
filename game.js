@@ -61,27 +61,21 @@ function init() {
 
     mat4.translate(glGlobals.mv, [0, 100, 0]);
 
-    var scene = new zogl.zScene();
+    var scene = new zogl.zScene(400, 400);// { "lighting": false });
     var sceneSprite = scene.addObject();
     f.drawOnSprite("lel", sceneSprite);
 
-    var rt = new zogl.zRenderTarget();
+    //var light = scene.addLight(zogl.LightType.POINT);
+    //light.setBrightness(0.01);
+    //light.update();
 
     var game = function() {
         w.clear('#FFFFFF');
 
         glGlobals.defaultShader.bind();
-        glGlobals.defaultShader.setParameter("mv", glGlobals.mv);
+        glGlobals.defaultShader.setParameterMat("mv", glGlobals.mv);
 
-        //scene.draw();
-
-        texture.bind();
-        vbo.draw();
-
-        poly.draw();
-
-        q.draw();
-        sp.draw();
+        scene.draw();
 
         requestAnimationFrame(game);
     };
