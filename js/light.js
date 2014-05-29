@@ -73,8 +73,9 @@ zogl.zLight.prototype.setMinAngle = function(degrees) {
 };
 
 zogl.zLight.prototype.update = function() {
-    this.enable();
     log(this.config);
+    
+    this.enable();
     this.shader.setParameterFl('light_col', this.config.color);
     this.shader.setParameterFl('light_pos', this.config.position);
     this.shader.setParameterFl('light_att', this.config.attenuation);
@@ -82,12 +83,16 @@ zogl.zLight.prototype.update = function() {
     this.shader.setParameterFl('light_max', this.config.max_angle);
     this.shader.setParameterFl('light_min', this.config.min_angle);
     this.shader.setParameterInt('scr_height', glGlobals.activeWindow.size.h);
-
     this.disable();
 };
 
 zogl.zLight.prototype.enable = function() {
+    var id = mat4.create();
+    mat4.identity(id);
+
     this.shader.bind();
+    this.shader.setParameterMat("mv", id);
+    this.shader.setParameterMat("proj", glGlobals.proj);
 };
 
 zogl.zLight.prototype.disable = function() {
