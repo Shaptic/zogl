@@ -24,6 +24,18 @@ zogl.zScene = function(w, h, options) {
     this.fullscreen.addIndices(new Uint16Array([
         0, 1, 3, 3, 1, 2
     ]));
+    this.fullscreen.addColors(new Float32Array([
+        1, 1, 1, 1,
+        1, 1, 1, 1,
+        1, 1, 1, 1,
+        1, 1, 1, 1
+    ]));
+    this.fullscreen.addTexCoords(new Float32Array([
+        0, 1,
+        1, 1,
+        1, 0,
+        0, 0
+    ]));
     this.fullscreen.offload();
 
     this.flags = {
@@ -34,12 +46,17 @@ zogl.zScene = function(w, h, options) {
 };
 
 zogl.zScene.prototype.draw = function(color) {
-    var color = color || new zogl.color4('#000000');
+    var color = color || new zogl.color4('#111111');
 
     if (this.flags.blendThrough) {
         color.a = 0.0;
     }
 
+    this.fbo2.bind();
+    gl.clearColor(color.r, color.g, color.b, color.a);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    this.fbo1.bind();
     gl.clearColor(color.r, color.g, color.b, color.a);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
@@ -52,6 +69,7 @@ zogl.zScene.prototype.draw = function(color) {
     }
     this.geometryVAO.offload();
 
+    this.fbo1.bind();
     this.geometryVAO.bind();
     for (var i in this.objects) {
         this.objects[i].draw(true);
