@@ -60,14 +60,12 @@ zogl.zScene.prototype.draw = function(color) {
     gl.clearColor(color.r, color.g, color.b, color.a);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    if (this.flags.lighting) {
-        gl.enable(gl.BLEND);
-    }
-
     for (var i in this.objects) {
         this.objects[i].offload(this.geometryVAO, { 'preserve': false });
     }
     this.geometryVAO.offload();
+
+    gl.enable(gl.BLEND);
 
     this.fbo1.bind();
     this.geometryVAO.bind();
@@ -90,6 +88,8 @@ zogl.zScene.prototype.draw = function(color) {
 
         tx = this.fbo2.texture;
     }
+
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     this.fbo1.unbind();
 
