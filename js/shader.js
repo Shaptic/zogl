@@ -149,9 +149,9 @@ zogl.zShader.prototype.setTexture = function(name, id) {
 zogl.zShader.prototype.bind = function() {
     gl.useProgram(this.program);
     glGlobals.activeShader = this;
-}
+};
 
 zogl.zShader.prototype.unbind = function() {
     gl.useProgram(null);
     glGlobals.activeShader = null;
-}
+};
