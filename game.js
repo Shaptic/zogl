@@ -1,5 +1,5 @@
 function init() {
-    var w = new zogl.zWindow(400, 400);
+    var w = new zogl.zWindow(800, 600);
     w.init();
 
     texture = new zogl.zTexture();
@@ -61,24 +61,22 @@ function init() {
 
     mat4.translate(glGlobals.mv, [0, 100, 0]);
 
-    var scene = new zogl.zScene(400, 400, { "lighting": true });
+    var scene = new zogl.zScene(0, 0, { "lighting": true });
     var sceneSprite = scene.addObject();
-    f.drawOnSprite("lel", sceneSprite);
+    //f.drawOnSprite("lel", sceneSprite);
+    f.drawOnSprite("dicks", sceneSprite);//, 100, 0);
 
     var fbo = new zogl.zRenderTarget();
 
     var light = scene.addLight(zogl.LightType.POINT);
-    light.setBrightness(1.5);
+    light.setBrightness(2.5);
     light.setPosition(100, 100);
     light.setColor(new zogl.color4('#FF0000'));
     light.update();
 
     document.onmousemove = function(evt) {
-        var rect = glGlobals.canvas.getBoundingClientRect();
-        var x = evt.clientX - rect.left,
-            y = evt.clientY - rect.top;
-
-        light.setPosition(x, y);
+        var pos = zogl.getMousePosition(evt);
+        light.setPosition(pos.x, pos.y);
         light.update();
     }; 
 
