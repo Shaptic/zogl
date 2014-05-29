@@ -61,13 +61,26 @@ function init() {
 
     mat4.translate(glGlobals.mv, [0, 100, 0]);
 
-    var scene = new zogl.zScene(400, 400);// { "lighting": false });
+    var scene = new zogl.zScene(400, 400, { "lighting": true });
     var sceneSprite = scene.addObject();
     f.drawOnSprite("lel", sceneSprite);
 
-    //var light = scene.addLight(zogl.LightType.POINT);
-    //light.setBrightness(0.01);
-    //light.update();
+    var fbo = new zogl.zRenderTarget();
+
+    var light = scene.addLight(zogl.LightType.POINT);
+    light.setBrightness(1.5);
+    light.setPosition(100, 100);
+    light.setColor(new zogl.color4('#FF0000'));
+    light.update();
+
+    document.onmousemove = function(evt) {
+        var rect = glGlobals.canvas.getBoundingClientRect();
+        var x = evt.clientX - rect.left,
+            y = evt.clientY - rect.top;
+
+        light.setPosition(x, y);
+        light.update();
+    }; 
 
     var game = function() {
         w.clear('#FFFFFF');
