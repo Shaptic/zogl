@@ -18,6 +18,14 @@ zogl.deg = function(rad) {
     return rad * 180.0 / Math.PI;
 };
 
+zogl.getMousePosition = function(evt) {
+    var rect = glGlobals.canvas.getBoundingClientRect();
+    return {
+        x:  evt.clientX - rect.left,
+        y:  evt.clientY - rect.top,
+    }
+};
+
 /**
  * Accepts lots of formats for color values:
  *
