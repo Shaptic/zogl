@@ -9,7 +9,7 @@ zogl.zRenderTarget = function(w, h) {
     };
 
     this.proj = mat4.create();
-    mat4.ortho(0, w, h, 0, 1.0, 10.0, this.proj);
+    mat4.ortho(0, this.size.w, this.size.h, 0, 1.0, 10.0, this.proj);
 
     this.bind();
     
