@@ -60,9 +60,9 @@ zogl.SHADERS = {
                                     '( light_att.z * dist * dist));',
 
             // Final fragment color is the light color * attenuation * brightness.
-            'gl_FragColor    = texture2D(texture, vs_texc);',
-            'gl_FragColor   *= light_col * vec4(att, att, att, 1.0);',
-            'gl_FragColor    = vec4(1.0, 0.0, 0.0, 1.0);//vs_color * vec4(gl_FragColor.rgb * light_brt, 1.0);',
+            'vec4 tmp        = texture2D(texture, vs_texc) *',
+            '                  light_col * vec4(att, att, att, 1.0);',
+            'gl_FragColor    = tmp * light_brt * vs_color;',
         '}'
     ].join('\n')
 };
