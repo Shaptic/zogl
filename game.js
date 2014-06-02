@@ -68,23 +68,25 @@ function init() {
 
     var fbo = new zogl.zRenderTarget();
 
+    var amb = scene.addLight(zogl.LightType.AMBIENT);
+    amb.setBrightness(3.0);
+    amb.setColor(new zogl.color4('#FF0000'));
+    amb.update();
+
     var light = scene.addLight(zogl.LightType.POINT);
-    light.setBrightness(2.5);
+    light.setBrightness(1.5);
     light.setPosition(100, 100);
-    light.setColor(new zogl.color4('#FF0000'));
+    light.setColor(new zogl.color4('#FFFFFF'));
     light.update();
 
     document.onmousemove = function(evt) {
         var pos = zogl.getMousePosition(evt);
         light.setPosition(pos.x, pos.y);
         light.update();
-    }; 
+    };
 
     var game = function() {
         w.clear('#FFFFFF');
-
-        glGlobals.defaultShader.bind();
-        glGlobals.defaultShader.setParameterMat("mv", glGlobals.mv);
 
         scene.draw();
 

@@ -44,7 +44,7 @@ zogl.SHADERS = {
         'uniform float  light_brt;',
         'uniform vec2   light_pos;',
         'uniform vec3   light_att;',
-        'uniform vec4   light_col;',        
+        'uniform vec4   light_col;',
 
         'void main(void) {',
             'vec2 pixel      = gl_FragCoord.xy;',
@@ -63,6 +63,23 @@ zogl.SHADERS = {
             'vec4 tmp        = texture2D(texture, vs_texc) *',
             '                  light_col * vec4(att, att, att, 1.0);',
             'gl_FragColor    = tmp * light_brt * vs_color;',
+        '}'
+    ].join('\n'),
+
+    'ambientLightFS': [
+        'precision mediump float;',
+
+        'varying vec2 vs_texc;',
+        'varying vec4 vs_color;',
+
+        'uniform vec4        light_col;',
+        'uniform float       light_brt;',
+        'uniform sampler2D   texture;',
+
+        'void main()',
+        '{',
+            'gl_FragColor   = light_brt * light_col;',
+            'gl_FragColor  *= vs_color * texture2D(texture, vs_texc);',
         '}'
     ].join('\n')
 };
