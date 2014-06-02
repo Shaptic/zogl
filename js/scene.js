@@ -60,6 +60,8 @@ zogl.zScene.prototype.draw = function(color) {
     gl.clearColor(color.r, color.g, color.b, color.a);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
+    glGlobals.defaultShader.bind();
+
     for (var i in this.objects) {
         this.objects[i].offload(this.geometryVAO, { 'preserve': false });
     }
@@ -100,7 +102,7 @@ zogl.zScene.prototype.draw = function(color) {
     glGlobals.defaultShader.bind();
     glGlobals.defaultShader.setParameterMat("proj", this.fbo1.proj);
     glGlobals.defaultShader.setParameterMat("mv",   id);
-    
+
     this.fullscreen.draw();
 
     tx.unbind();
