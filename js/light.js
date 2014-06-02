@@ -41,9 +41,9 @@ zogl.zLight = function(type, config) {
 
     this.shader = new zogl.zShader();
     this.shader.loadFromString(zogl.SHADERS.defaultvs, fragstr);
-    log(this.shader.errorstr);
+    log('Shader errors:', this.shader.errorstr);
 
-    this.update();    
+    this.update();
 };
 
 zogl.zLight.prototype.setBrightness = function(brightness) {
@@ -73,8 +73,6 @@ zogl.zLight.prototype.setMinAngle = function(degrees) {
 };
 
 zogl.zLight.prototype.update = function() {
-    log(this.config);
-    
     this.enable();
     this.shader.setParameterFl('light_col', this.config.color);
     this.shader.setParameterFl('light_pos', this.config.position);

@@ -97,8 +97,7 @@ zogl.zShader.prototype.setParameterMat = function(name, value) {
 };
 
 zogl.zShader.prototype.setParameterFl = function(name, values) {
-    var loc = this.getParameterLocation(name)
-    log('setting ' + name + ' to ' + values + '[' + values.length + ']');
+    var loc = this.getParameterLocation(name);
 
     if (values === parseFloat(values) || values.length == 1) {
         gl.uniform1f(loc, values);
@@ -109,7 +108,7 @@ zogl.zShader.prototype.setParameterFl = function(name, values) {
     if (values.length == 2) {
         fn = gl.uniform2fv;
     } else if (values.length == 3) {
-        fn = gl.uniform3fv;        
+        fn = gl.uniform3fv;
     } else if (values.length == 4) {
         fn = gl.uniform4fv;
     } else {
@@ -130,7 +129,7 @@ zogl.zShader.prototype.setParameterInt = function(name, values) {
     if (values.length == 2) {
         fn = gl.uniform2iv;
     } else if (values.length == 3) {
-        fn = gl.uniform3iv;        
+        fn = gl.uniform3iv;
     } else if (values.length == 4) {
         fn = gl.uniform4iv;
     } else {
