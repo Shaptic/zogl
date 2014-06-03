@@ -60,7 +60,9 @@ zogl.zSprite.prototype.draw = function(ready) {
     var wontwork = false;
     if (this.passes.length == 1) {
         for (var i in this.prims) {
-            if (this.prims[i].getShader() == glGlobals.defaultShader) {
+            if (this.prims[i].getShader() == undefined ||
+                this.prims[i].getShader() == glGlobals.defaultShader ||
+                this.prims[i].getShader() == this.passes[0]) {
                 this.prims[i].setShader(this.passes[0]);
             } else {
                 wontwork = true;
@@ -94,11 +96,12 @@ zogl.zSprite.prototype.draw = function(ready) {
         fbo2 = new zogl.zRenderTarget(mw, mh);
     }
 
+    var old_fbo = glGlobals.activeRenderTarget;
     for (var j in this.passes) {
         activeFBO.bind();
         this.passes[j].bind();
 
-        this._drawPrims();
+        this._drawPrims(ready);
 
         if (fbo2 !== null && fbo1 !== null) {
             if (activeFBO == fbo1) {
@@ -111,6 +114,7 @@ zogl.zSprite.prototype.draw = function(ready) {
 
     glGlobals.defaultShader.unbind();
 
+    if (old_fbo) old_fbo.bind();
     var q = new zogl.zQuad();
     q.attachTexture(activeFBO.texture);
     q.create();
