@@ -2,14 +2,10 @@ function init() {
     var w = new zogl.zWindow(800, 600);
     w.init();
 
-    texture = new zogl.zTexture();
+    var texture = new zogl.zTexture();
     texture.loadFromFile("tank.png");
 
-    gl.activeTexture(gl.TEXTURE0);
-    glGlobals.defaultShader.setTexture("texture", 0);
-    glGlobals.defaultShader.bind();
-    texture.bind();
-
+    /*
     vbo = new zogl.zBufferSet(gl.STATIC_DRAW);
     vbo.addPositions(new Float32Array([
         0,   0,
@@ -52,21 +48,28 @@ function init() {
     q.attachTexture(tx);
     q.create();
 
-    var sp = new zogl.zSprite();
-    sp.loadFromTexture(tx);
-    sp.flags.blend = true;
-    sp.addObject(q, 100, 0);
-    sp.move(150, 0);
-    f.drawOnSprite("dicks", sp, 100, 0);
-
     mat4.translate(glGlobals.mv, [0, 100, 0]);
 
-    var scene = new zogl.zScene(0, 0, { "lighting": true });
+    var scene = new zogl.zScene(0, 0, { "lighting": false });
     var sceneSprite = scene.addObject();
-    //f.drawOnSprite("lel", sceneSprite);
-    f.drawOnSprite("dicks", sceneSprite);//, 100, 0);
+    //sceneSprite.loadFromTexture(texture);
+    f.drawOnSprite("lel", sceneSprite);
+    //f.drawOnSprite("dicks", sceneSprite, 100, 0);
 
-    var fbo = new zogl.zRenderTarget();
+    var allRed = new zogl.zShader();
+    allRed.loadFromString(zogl.SHADERS.defaultvs, [
+        'precision mediump float;',
+
+        'varying vec2 vs_texc;',
+        'varying vec4 vs_color;',
+
+        'uniform sampler2D texture;',
+
+        'void main(void) {',
+            'gl_FragColor = vec4(0.5, 0, 0, 1.0) * texture2D(texture, vs_texc);',
+        '}'
+    ].join('\n'))
+    sceneSprite.addPass(allRed);
 
     var amb = scene.addLight(zogl.LightType.AMBIENT);
     amb.setBrightness(3.0);
@@ -84,11 +87,16 @@ function init() {
         light.setPosition(pos.x, pos.y);
         light.update();
     };
+    */
+
+    var sp = new zogl.zSprite();
+    sp.loadFromTexture(texture);
 
     var game = function() {
         w.clear('#FFFFFF');
 
-        scene.draw();
+        //scene.draw();
+        sp.draw();
 
         requestAnimationFrame(game);
     };
