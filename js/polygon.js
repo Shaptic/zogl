@@ -151,7 +151,7 @@ zogl.zPolygon.prototype.offload = function(vao, flags) {
 };
 
 zogl.zPolygon.prototype.prepareMaterial = function() {
-    this.shader.bind();
+    this.getShader().bind();
     this.texture.bind();
 };
 

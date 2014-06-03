@@ -69,7 +69,7 @@ zogl.zQuad.prototype.loadTexCoords = function() {
 };
 
 zogl.zQuad.prototype.attachTexture = function(texture) {
-    this.texture = texture
+    this.texture = texture;
     this.setColor('#FFFFFF');
     if (!this.size.w || !this.size.h) {
         this.resize(texture.size.w, texture.size.h);

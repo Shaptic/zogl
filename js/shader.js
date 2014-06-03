@@ -7,6 +7,8 @@ zogl.zShader = function() {
     this.fs = null;
     this.program = null;
     this.uniforms = {};
+
+    this.sources = (zogl.debug) ? [] : undefined;
 }
 
 zogl.zShader.prototype.loadFromString = function(vsstr, fsstr) {
@@ -68,6 +70,10 @@ zogl.zShader.prototype.loadFromStr = function(str, type) {
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
         this.errorstr = gl.getShaderInfoLog(shader);
         return null;
+    }
+
+    if (zogl.debug) {
+        this.sources.push(str);
     }
 
     return shader;
