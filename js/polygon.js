@@ -1,5 +1,3 @@
-zogl = zogl || {};
-
 zogl.zPolygon = function() {
     this.vao = null;
     this.internal = false;
@@ -24,7 +22,7 @@ zogl.zPolygon = function() {
 };
 
 zogl.zPolygon.prototype.clone = function() {
-    var copy = new zogl.zPolygon();
+    var copy = new this.constructor();
 
     copy.drawData = {
         'positions':    new Float32Array(this.drawData.positions),
@@ -164,3 +162,7 @@ zogl.zPolygon.prototype.getShader = function() {
 zogl.zPolygon.prototype.setShader = function(s) {
     this.shader = s;
 };
+
+zogl.zPolygon.setColor = function(col) {
+    this.color = new color4(col);
+}
