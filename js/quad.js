@@ -1,5 +1,3 @@
-zogl = zogl || {}
-
 zogl.zQuad = function(width, height) {
     this.poly = new zogl.zPolygon();
     this.size = {
@@ -45,7 +43,8 @@ zogl.zQuad.prototype.resize = function(w, h) {
     this.size.w = w;
     this.size.h = h;
 
-    if (this.poly.drawData.positions.length > 0) {
+    if (this.poly.drawData.positions.length > 0 &&
+        this.poly.verts.length > 0) {
         this.create();
     }
 };
@@ -107,4 +106,12 @@ zogl.zQuad.prototype.offload = function(vao, flags) {
 
 zogl.zQuad.prototype.prepareMaterial = function() {
     this.poly.prepareMaterial();
+};
+
+zogl.zQuad.prototype.getShader = function() {
+    return this.poly.shader;
+};
+
+zogl.zQuad.prototype.setShader = function(s) {
+    this.poly.setShader(s);
 };

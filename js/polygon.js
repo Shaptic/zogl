@@ -156,3 +156,11 @@ zogl.zPolygon.prototype.prepareMaterial = function() {
     this.shader.bind();
     this.texture.bind();
 };
+
+zogl.zPolygon.prototype.getShader = function() {
+    return this.shader;
+};
+
+zogl.zPolygon.prototype.setShader = function(s) {
+    this.shader = s;
+};
