@@ -1,5 +1,3 @@
-var zogl = zogl || {};
-
 zogl.zShader = function() {
     this.vs_fn = "";
     this.fs_fn = "";
@@ -152,5 +150,5 @@ zogl.zShader.prototype.bind = function() {
 
 zogl.zShader.prototype.unbind = function() {
     gl.useProgram(null);
-    glGlobals.activeShader = null;
+    glGlobals.activeShader = glGlobals.defaultShader;
 };
