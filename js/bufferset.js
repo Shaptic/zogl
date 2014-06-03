@@ -1,5 +1,3 @@
-zogl = zogl || {};
-
 zogl.zBufferSet = function(type) {
     this.buffers = {};
     this.type = type || gl.STATIC_DRAW;

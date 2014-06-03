@@ -43,7 +43,6 @@ zogl.zTexture.prototype.loadFromRaw = function(data, flip_y, w, h) {
                       gl.UNSIGNED_BYTE, data);
         this.size.w = data.width;
         this.size.h = data.height;
-        log(this.size);
     }
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);

@@ -41,8 +41,6 @@ zogl.zQuad.prototype.create = function() {
 };
 
 zogl.zQuad.prototype.resize = function(w, h) {
-    log('quad:', this);
-
     this.size.w = w;
     this.size.h = h;
 
