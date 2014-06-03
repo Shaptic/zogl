@@ -26,18 +26,14 @@ zogl.zSprite.prototype.loadFromTexture = function(texture) {
     this.rect.h = texture.size.h;
 
     var q = new zogl.zQuad(this.rect.w, this.rect.h);
-
-    var tmp = texture.id.image.onload;
     var that = this;
-    texture.id.image.onload = function() {
-        tmp();
+    texture.setOnload(function() {
         q.resize(texture.size.w, texture.size.h);
         q.attachTexture(texture);
         q.create();
         that.prims = [];
         that.addObject(q, 0, 0);
-        log('from callback', q.size);
-    }
+    });
 };
 
 zogl.zSprite.prototype.addObject = function(obj, x, y) {

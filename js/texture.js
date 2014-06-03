@@ -7,6 +7,8 @@ zogl.zTexture = function() {
         'w': 0,
         'h': 0
     };
+    this.loaded = false;
+    this.resetOnload();
 };
 
 zogl.zTexture.prototype.loadFromFile = function(filename) {
@@ -14,12 +16,7 @@ zogl.zTexture.prototype.loadFromFile = function(filename) {
 
     this.filename = filename;
     this.id.image = new Image();
-
-    var that = this;
-    this.id.image.onload = function() {
-        that.loadFromRaw(that.id.image, true);
-    }
-
+    this.id.image.onload = this.callback;
     this.id.image.src = filename;
 };
 
@@ -62,4 +59,31 @@ zogl.zTexture.prototype.bind = function() {
 
 zogl.zTexture.prototype.unbind = function() {
     gl.bindTexture(gl.TEXTURE_2D, null);
+};
+
+zogl.zTexture.prototype.setOnload = function(fn) {
+    // If we're already loaded, there's no need to set a true callback,
+    // just execute immediately.
+    if (this.loaded) {
+        fn();
+    }
+
+    // We still need to set it, though, for subsequent loads (if any).
+    var tmp = this.callback;
+    this.callback = function() {
+        tmp();
+        fn();
+    }
+
+    if (this.id.image !== undefined) {
+        this.id.image.onload = this.callback();
+    }
+};
+
+zogl.zTexture.prototype.resetOnload = function() {
+    var that = this;
+    this.callback = function(texture) {
+        that.loadFromRaw(that.id.image, true);
+        that.loaded = true;
+    };
 };
