@@ -52,23 +52,17 @@ zogl.zScene.prototype.draw = function(color) {
         color.a = 0.0;
     }
 
-    this.fbo2.bind();
-    gl.clearColor(color.r, color.g, color.b, color.a);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    this.fbo1.bind();
-    gl.clearColor(color.r, color.g, color.b, color.a);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    this.fbo2.bind(); this.fbo2.clear(color);
+    this.fbo1.bind(); this.fbo1.clear(color);
 
     glGlobals.defaultShader.bind();
-
     for (var i in this.objects) {
         this.objects[i].offload(this.geometryVAO, { 'preserve': false });
     }
-    this.geometryVAO.offload();
 
-    this.fbo1.bind();
+    this.geometryVAO.offload();
     this.geometryVAO.bind();
+
     for (var i in this.objects) {
         this.objects[i].draw(true);
     }

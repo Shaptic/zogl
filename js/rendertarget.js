@@ -30,6 +30,12 @@ zogl.zRenderTarget = function(w, h) {
     this.unbind();
 };
 
+zogl.zRenderTarget.prototype.clear = function(col) {
+    col = new zogl.color4(col || '#000000');
+    gl.clearColor(col.r, col.g, col.b, col.a);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+};
+
 zogl.zRenderTarget.prototype.bind = function() {
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
     gl.viewport(0, 0, this.size.w, this.size.h);
