@@ -12,12 +12,12 @@ zogl.zRenderTarget = function(w, h) {
     mat4.ortho(0, this.size.w, this.size.h, 0, 1.0, 10.0, this.proj);
 
     this.bind();
-    
+
     this.texture.loadFromRaw(null, false, this.size.w, this.size.h);
     this.texture.bind();
 
     gl.bindRenderbuffer(gl.RENDERBUFFER, this.rbo);
-    gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, 
+    gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16,
                            this.size.w, this.size.h);
 
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0,
@@ -34,6 +34,7 @@ zogl.zRenderTarget.prototype.bind = function() {
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo);
     gl.viewport(0, 0, this.size.w, this.size.h);
     glGlobals.proj = this.proj;
+    glGlobals.activeRenderTarget = this;
 };
 
 zogl.zRenderTarget.prototype.unbind = function() {
@@ -41,4 +42,5 @@ zogl.zRenderTarget.prototype.unbind = function() {
     gl.viewport(0, 0, glGlobals.activeWindow.size.w,
                       glGlobals.activeWindow.size.h);
     glGlobals.proj = glGlobals.activeWindow.proj;
+    glGlobals.activeRenderTarget = null;
 };
