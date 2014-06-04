@@ -94,7 +94,7 @@ zogl.zPolygon.prototype.create = function() {
     return true;
 };
 
-zogl.zPolygon.prototype.draw = function(ready) {
+zogl.zPolygon.prototype.draw = function(ready, shader) {
     var ready = ready || false;
 
     if (!ready) {
@@ -107,13 +107,17 @@ zogl.zPolygon.prototype.draw = function(ready) {
 
         this.vao.bind();
         this.prepareMaterial();
-        this.shader.setParameterMat("mv", this.mv);
-        this.shader.setParameterMat("proj", glGlobals.proj);
+
+        if (shader !== undefined) {
+            shader.bind();
+        }
     }
 
     mat4.identity(this.mv);
     mat4.translate(this.mv, [this.x, this.y, 0]);
+
     glGlobals.activeShader.setParameterMat("mv", this.mv);
+    glGlobals.activeShader.setParameterMat("proj", glGlobals.proj);
 
     gl.drawElements(gl.TRIANGLES, this.drawData.icount,
                     gl.UNSIGNED_SHORT, this.offset);
@@ -166,3 +170,7 @@ zogl.zPolygon.prototype.setShader = function(s) {
 zogl.zPolygon.setColor = function(col) {
     this.color = new color4(col);
 }
+
+zogl.zPolygon.prototype.getTexture = function() {
+    return this.texture;
+};

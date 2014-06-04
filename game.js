@@ -2,6 +2,34 @@ function init() {
     var w = new zogl.zWindow(800, 600);
     w.init();
 
+    var allRed = new zogl.zShader();
+    allRed.loadFromString(zogl.SHADERS.defaultvs, [
+        'precision mediump float;',
+
+        'varying vec2 vs_texc;',
+        'varying vec4 vs_color;',
+
+        'uniform sampler2D texture;',
+
+        'void main(void) {',
+            'gl_FragColor = vec4(1.0, 0, 0, 1.0) * texture2D(texture, vs_texc);',
+        '}'
+    ].join('\n'));
+
+    var allBlue = new zogl.zShader();
+    allBlue.loadFromString(zogl.SHADERS.defaultvs, [
+        'precision mediump float;',
+
+        'varying vec2 vs_texc;',
+        'varying vec4 vs_color;',
+
+        'uniform sampler2D texture;',
+
+        'void main(void) {',
+            'gl_FragColor = vec4(0.0, 0.0, 0.5, 1.0) * texture2D(texture, vs_texc);',
+        '}'
+    ].join('\n'));
+
     var texture = new zogl.zTexture();
     texture.loadFromFile("tank.png");
 
@@ -49,27 +77,16 @@ function init() {
     q.create();
 
     mat4.translate(glGlobals.mv, [0, 100, 0]);
+    */
 
     var scene = new zogl.zScene(0, 0, { "lighting": false });
     var sceneSprite = scene.addObject();
-    //sceneSprite.loadFromTexture(texture);
-    f.drawOnSprite("lel", sceneSprite);
+    sceneSprite.loadFromTexture(texture);
+    //f.drawOnSprite("lel", sceneSprite);
     //f.drawOnSprite("dicks", sceneSprite, 100, 0);
 
-    var allRed = new zogl.zShader();
-    allRed.loadFromString(zogl.SHADERS.defaultvs, [
-        'precision mediump float;',
-
-        'varying vec2 vs_texc;',
-        'varying vec4 vs_color;',
-
-        'uniform sampler2D texture;',
-
-        'void main(void) {',
-            'gl_FragColor = vec4(0.5, 0, 0, 1.0) * texture2D(texture, vs_texc);',
-        '}'
-    ].join('\n'))
     sceneSprite.addPass(allRed);
+    sceneSprite.addPass(allBlue);
 
     var amb = scene.addLight(zogl.LightType.AMBIENT);
     amb.setBrightness(3.0);
@@ -87,18 +104,12 @@ function init() {
         light.setPosition(pos.x, pos.y);
         light.update();
     };
-    */
-
-    var sp = new zogl.zSprite();
-    sp.loadFromTexture(texture);
 
     var game = function() {
         w.clear('#FFFFFF');
-
-        //scene.draw();
-        sp.draw();
-
-        requestAnimationFrame(game);
+        //sp.draw();
+        sceneSprite.draw();
+        //requestAnimationFrame(game);
     };
 
     requestAnimationFrame(game);

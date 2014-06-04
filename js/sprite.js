@@ -47,7 +47,7 @@ zogl.zSprite.prototype.move = function(x, y) {
     this.position = vec3.create([x, y, 0]);
 };
 
-zogl.zSprite.prototype.addPass = function(shader, options) {
+zogl.zSprite.prototype.addPass = function(shader) {
     this.passes.push(shader);
 };
 
@@ -57,18 +57,22 @@ zogl.zSprite.prototype.draw = function(ready) {
         return;
     }
 
-    var wontwork = false;
+    var wontwork = true;
     if (this.passes.length == 1) {
         for (var i in this.prims) {
             if (this.prims[i].getShader() == undefined ||
                 this.prims[i].getShader() == glGlobals.defaultShader ||
                 this.prims[i].getShader() == this.passes[0]) {
                 this.prims[i].setShader(this.passes[0]);
+                wontwork = false;
             } else {
                 wontwork = true;
+                break;
             }
         }
     }
+
+    console.log('will it work w/o changes? -- ', !wontwork);
 
     if (!wontwork) {
         this._drawPrims(ready);
@@ -97,26 +101,60 @@ zogl.zSprite.prototype.draw = function(ready) {
     }
 
     var old_fbo = glGlobals.activeRenderTarget;
+
+    // Draw once to a texture.
+    fbo1.bind();
+    this._drawPrims(ready);
+
+    // Load that texture into geometry.
+    var final_texture = fbo1.texture;
+    var q = new zogl.zQuad(mw, mh);
+    q.create();
+
+    /*
+     * Do the pass in a ping-pong on that texture, swapping w/ each pass.
+     *
+     * i = 0:
+     *  Texture #1 is bound, FBO #2 is bound. Result is in texture #2.
+     *
+     * i = 1:
+     *  Texture #2 (result from last) is bound, FBO #1 is bound.
+     *  Result is in texture #1.
+     *
+     * i = 2:
+     *  Texture #1 is bound, FBO #2 is bound. Result is in texture #2.
+     *
+     * i = n:
+     *  Texture #1 is bound if i is even.
+     *  FBO #2     is bound if i is even.
+     *  Result     is in #2 if i is even.
+     *
+     */
+
     for (var j in this.passes) {
-        activeFBO.bind();
-        this.passes[j].bind();
+        // swap (ping-pong technique)
+        var even = !((j & 0x01) == 0);
+        if (even) fbo2.bind();
+        else      fbo1.bind();
 
-        this._drawPrims(ready);
+        console.log('drawing on texture #' + (even ? 'two' : 'one'));
 
-        if (fbo2 !== null && fbo1 !== null) {
-            if (activeFBO == fbo1) {
-                activeFBO = fbo2;
-            } else {
-                activeFBO = fbo1;
-            }
-        }
+        q.attachTexture(final_texture);
+        q.draw(false, this.passes[j]);
+
+        final_texture = even ? fbo2.texture : fbo1.texture;
     }
 
+    console.log('final texture is ' + (
+        final_texture == fbo1.texture ? 'one' : 'two'
+    ));
+
     glGlobals.defaultShader.unbind();
+    glGlobals.activeRenderTarget.unbind();
 
     if (old_fbo) old_fbo.bind();
     var q = new zogl.zQuad();
-    q.attachTexture(activeFBO.texture);
+    q.attachTexture(final_texture);
     q.create();
     q.draw();
 };
@@ -127,7 +165,7 @@ zogl.zSprite.prototype.offload = function(vao, flags) {
     }
 };
 
-zogl.zSprite.prototype._drawPrims = function(ready) {
+zogl.zSprite.prototype._drawPrims = function(ready, shader) {
     for (var i in this.prims) {
         var pos = [
             this.prims[i].getX(),
@@ -142,11 +180,14 @@ zogl.zSprite.prototype._drawPrims = function(ready) {
         this.prims[i].move(this.position[0] + pos[0],
                            this.position[1] + pos[1]);
 
-        if (ready) {
+        if (shader !== undefined) {
+            shader.bind();
+            this.prims[i].getTexture().bind();
+        } else if (ready) {
             this.prims[i].prepareMaterial();
         }
 
-        this.prims[i].draw(ready);
+        this.prims[i].draw(ready, shader);
         this.prims[i].move(pos[0], pos[1]);
 
         if (this.flags.blend && !this.prims[i+1]) {
