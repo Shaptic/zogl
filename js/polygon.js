@@ -19,6 +19,11 @@ zogl.zPolygon = function() {
 
     this.shader  = glGlobals.defaultShader;
     this.texture = glGlobals.defaultTexture;
+
+    this.size = {
+        'w': 0,
+        'h': 0
+    };
 };
 
 zogl.zPolygon.prototype.clone = function() {
@@ -40,6 +45,10 @@ zogl.zPolygon.prototype.clone = function() {
     copy.verts  = this.verts.slice(0);
     copy.color  = new zogl.color4(this.color);
     copy.offset = 0;
+    copy.size   = {
+        'w': this.calcWidth(),
+        'h': this.calcHeight()
+    }
 
     mat4.translate(copy.mv, [copy.x, copy.y, 0]);
 
@@ -54,6 +63,11 @@ zogl.zPolygon.prototype.move = function(x, y) {
 zogl.zPolygon.prototype.addVertex = function(x, y) {
     this.verts.push(x);
     this.verts.push(y);
+
+    this.size = {
+        'w': this.calcWidth(),
+        'h': this.calcHeight()
+    };
 };
 
 zogl.zPolygon.prototype.create = function() {
@@ -173,4 +187,26 @@ zogl.zPolygon.setColor = function(col) {
 
 zogl.zPolygon.prototype.getTexture = function() {
     return this.texture;
+};
+
+zogl.zPolygon.prototype.calcWidth = function() {
+    var set = this.verts.length == 0 ? this.drawData.positions : this.verts;
+
+    var mw = 0;
+    for (var i = 0; i < set.length; i += 2) {
+        mw = Math.max(mw, set[i]);
+    }
+    this.size.w = mw;
+    return mw;
+};
+
+zogl.zPolygon.prototype.calcHeight = function() {
+    var set = this.verts.length == 0 ? this.drawData.positions : this.verts;
+
+    var mh = 0;
+    for (var i = 0; i < set.length; i += 2) {
+        mh = Math.max(mh, set[i]);
+    }
+    this.size.h = mh;
+    return mh;
 };
