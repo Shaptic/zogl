@@ -51,7 +51,9 @@ zogl.zLight.prototype.setBrightness = function(brightness) {
 };
 
 zogl.zLight.prototype.setColor = function(col) {
-    this.config.color = col.asGL();
+    this.config.color = typeof col == 'Object'  ?
+                        col.asGL()              :
+                        new zogl.color4(col).asGL();
 };
 
 zogl.zLight.prototype.setAttenuation = function(constant, linear, quadratic) {
