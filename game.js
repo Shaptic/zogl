@@ -79,7 +79,7 @@ function init() {
     var scene = new zogl.zScene(0, 0, { "lighting": false });
     var sceneSprite = scene.addObject();
     sceneSprite.loadFromTexture(texture);
-    sceneSprite.addObject(q);                   // <-- problem here; can't handle > 1 object
+    //sceneSprite.addObject(q);                   // <-- problem here; can't handle > 1 object
     //f.drawOnSprite("lel", sceneSprite);
     //f.drawOnSprite("dicks", sceneSprite, 100, 0);
 
@@ -101,6 +101,14 @@ function init() {
         var pos = zogl.getMousePosition(evt);
         light.setPosition(pos.x, pos.y);
         light.update();
+
+        console.log(pos.x, pos.y, sceneSprite.rect);
+
+        if (sceneSprite.collides(pos.x, pos.y)) {
+            sceneSprite.move(100, 100);
+        } else {
+            sceneSprite.move(0, 0);
+        }
     };
 
     var game = function() {
