@@ -1,14 +1,8 @@
 zogl.zSprite = function() {
-    this.rect = {
-        'x': 0,
-        'y': 0,
-        'w': 0,
-        'h': 0
-    }
+    this.rect = new zogl.rect();
     this.prims = [];
     this.passes = [];
     this.mv = mat4.create();
-    this.position = vec3.create([0, 0, 0]);
     this.flags = {
         'blend': false
     }
@@ -40,11 +34,18 @@ zogl.zSprite.prototype.addObject = function(obj, x, y) {
     var tmp = obj.clone();
     tmp.move(x || 0, y || 0);
     this.prims.push(tmp);
+
+    log(this.rect);
+
+    this.rect.w = Math.max(this.rect.w, obj.calcWidth()  + x);
+    this.rect.h = Math.max(this.rect.h, obj.calcHeight() + y);
+
+    log(this.rect);
 };
 
 zogl.zSprite.prototype.move = function(x, y) {
-    mat4.translate(this.mv, this.position);
-    this.position = vec3.create([x, y, 0]);
+    mat4.translate(this.mv, vec3.create(x, y, 0));
+    this.rect.x = x; this.rect.y = y;
 };
 
 zogl.zSprite.prototype.addPass = function(shader) {
@@ -169,8 +170,8 @@ zogl.zSprite.prototype._drawPrims = function(ready, shader) {
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
         }
 
-        this.prims[i].move(this.position[0] + pos[0],
-                           this.position[1] + pos[1]);
+        this.prims[i].move(this.getX() + pos[0],
+                           this.getY() + pos[1]);
 
         if (shader !== undefined) {
             shader.bind();
@@ -186,4 +187,22 @@ zogl.zSprite.prototype._drawPrims = function(ready, shader) {
             gl.disable(gl.BLEND);
         }
     }
+};
+
+zogl.zSprite.prototype.collides = function(x, y) {
+    if (x instanceof zogl.rect) {
+        return this.rect.collideRect(x);
+    } else if (x instanceof zogl.zSprite) {
+        return this.rect.collideRect(x.rect);
+    }
+
+    return this.rect.collidePosition(x, y);
+};
+
+zogl.zSprite.prototype.getX = function() {
+    return this.rect.x;
+};
+
+zogl.zSprite.prototype.getY = function() {
+    return this.rect.y;
 };
