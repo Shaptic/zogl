@@ -134,29 +134,22 @@ zogl.zSprite.prototype.draw = function(ready) {
     for (var j in this.passes) {
         // swap (ping-pong technique)
         var even = !((j & 0x01) == 0);
-        if (even) fbo2.bind();
-        else      fbo1.bind();
 
-        console.log('drawing on texture #' + (even ? 'two' : 'one'));
+        if (j+1 < this.passes.length) {
+            if (even) fbo2.bind();
+            else      fbo1.bind();
+
+        // on the last pass, we draw directly to the screen, though.
+        } else {
+            glGlobals.activeRenderTarget.unbind();
+            if (old_fbo) old_fbo.bind();
+        }
 
         q.attachTexture(final_texture);
         q.draw(false, this.passes[j]);
 
         final_texture = even ? fbo2.texture : fbo1.texture;
     }
-
-    console.log('final texture is ' + (
-        final_texture == fbo1.texture ? 'one' : 'two'
-    ));
-
-    glGlobals.defaultShader.unbind();
-    glGlobals.activeRenderTarget.unbind();
-
-    if (old_fbo) old_fbo.bind();
-    var q = new zogl.zQuad();
-    q.attachTexture(final_texture);
-    q.create();
-    q.draw();
 };
 
 zogl.zSprite.prototype.offload = function(vao, flags) {
