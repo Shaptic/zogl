@@ -12,7 +12,7 @@ function init() {
         'uniform sampler2D texture;',
 
         'void main(void) {',
-            'gl_FragColor = vec4(1.0, 0, 0, 1.0) * texture2D(texture, vs_texc);',
+            'gl_FragColor = vec4(1.0, 0, 0, 1.0) + texture2D(texture, vs_texc);',
         '}'
     ].join('\n'));
 
@@ -26,7 +26,7 @@ function init() {
         'uniform sampler2D texture;',
 
         'void main(void) {',
-            'gl_FragColor = vec4(0.0, 0.0, 0.5, 1.0) * texture2D(texture, vs_texc);',
+            'gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0) + texture2D(texture, vs_texc);',
         '}'
     ].join('\n'));
 
@@ -66,31 +66,29 @@ function init() {
     poly.setColor('#0000FF');
     poly.create();
     poly.move(150, 100);
-
+    */
     var f = new zogl.zFont();
     f.loadFromFile("monospace", 48);
     var tx = f.draw("help");
 
     var q = new zogl.zQuad();
     q.resize(64, 64);
-    q.attachTexture(tx);
+    //q.attachTexture(tx);
     q.create();
-
-    mat4.translate(glGlobals.mv, [0, 100, 0]);
-    */
 
     var scene = new zogl.zScene(0, 0, { "lighting": false });
     var sceneSprite = scene.addObject();
     sceneSprite.loadFromTexture(texture);
+    sceneSprite.addObject(q);                   // <-- problem here; can't handle > 1 object
     //f.drawOnSprite("lel", sceneSprite);
     //f.drawOnSprite("dicks", sceneSprite, 100, 0);
 
-    sceneSprite.addPass(allRed);
-    sceneSprite.addPass(allBlue);
+    //sceneSprite.addPass(allRed);
+    //sceneSprite.addPass(allBlue);
 
     var amb = scene.addLight(zogl.LightType.AMBIENT);
-    amb.setBrightness(3.0);
-    amb.setColor(new zogl.color4('#FF0000'));
+    amb.setBrightness(0.1);
+    amb.setColor(new zogl.color4('#FFFFFF'));
     amb.update();
 
     var light = scene.addLight(zogl.LightType.POINT);
@@ -107,9 +105,8 @@ function init() {
 
     var game = function() {
         w.clear('#FFFFFF');
-        //sp.draw();
-        sceneSprite.draw();
-        //requestAnimationFrame(game);
+        scene.draw();
+        requestAnimationFrame(game);
     };
 
     requestAnimationFrame(game);

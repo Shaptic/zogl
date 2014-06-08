@@ -72,8 +72,6 @@ zogl.zSprite.prototype.draw = function(ready) {
         }
     }
 
-    console.log('will it work w/o changes? -- ', !wontwork);
-
     if (!wontwork) {
         this._drawPrims(ready);
         return;
@@ -94,13 +92,12 @@ zogl.zSprite.prototype.draw = function(ready) {
         mh = mh > h ? mh : h;
     }
 
+    var old_fbo = glGlobals.activeRenderTarget;
     var fbo1 = new zogl.zRenderTarget(mw, mh), fbo2 = null;
     var activeFBO = fbo1;
     if (this.passes.length > 1) {
         fbo2 = new zogl.zRenderTarget(mw, mh);
     }
-
-    var old_fbo = glGlobals.activeRenderTarget;
 
     // Draw once to a texture.
     fbo1.bind();
@@ -142,7 +139,9 @@ zogl.zSprite.prototype.draw = function(ready) {
         // on the last pass, we draw directly to the screen, though.
         } else {
             glGlobals.activeRenderTarget.unbind();
-            if (old_fbo) old_fbo.bind();
+            if (old_fbo) {
+                old_fbo.bind();
+            }
         }
 
         q.attachTexture(final_texture);

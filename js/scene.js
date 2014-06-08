@@ -46,7 +46,7 @@ zogl.zScene = function(w, h, options) {
 };
 
 zogl.zScene.prototype.draw = function(color) {
-    var color = new zogl.color4(color || '#111111');
+    var color = new zogl.color4(color || [0.1, 0.1, 0.1, 1.0]);
 
     if (this.flags.blendThrough) {
         color.a = 0.0;
