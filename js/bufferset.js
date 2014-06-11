@@ -5,10 +5,11 @@ zogl.zBufferSet = function(type) {
 
 zogl.zBufferSet.prototype.addData = function(data) {
     this.addPositions(data.positions);
-    this.addIndices(data.indices);
+    var offset = this.addIndices(data.indices);
     this.addColors(data.colors);
     this.addTexCoords(data.texcoords);
-    return this.buffers.positions.size;
+    log(this.buffers);
+    return offset;
 }
 
 zogl.zBufferSet.prototype.addPositions = function(data) {
@@ -18,18 +19,20 @@ zogl.zBufferSet.prototype.addPositions = function(data) {
         this.buffers.positions = new zogl.zBuffer(gl.ARRAY_BUFFER, this.type);
     }
 
-    this.buffers.positions.addData(data, 2);
+    var offset = this.buffers.positions.addData(data, 2);
     this.buffers.positions.setAttribute("in_vert");
+    return offset;
 };
 
 zogl.zBufferSet.prototype.addIndices = function(data) {
     if (!data || !data.length) return;
 
     if (!('posIndex' in this.buffers)) {
-        this.buffers.posIndex = new zogl.zBuffer(gl.ELEMENT_ARRAY_BUFFER, this.type);
+        this.buffers.posIndex = new zogl.zBuffer(gl.ELEMENT_ARRAY_BUFFER,
+                                                 this.type, Uint16Array);
     }
 
-    this.buffers.posIndex.addData(data, 1);
+    return this.buffers.posIndex.addData(data, 1);
 };
 
 zogl.zBufferSet.prototype.addColors = function(data) {
@@ -39,8 +42,9 @@ zogl.zBufferSet.prototype.addColors = function(data) {
         this.buffers.colors = new zogl.zBuffer(gl.ARRAY_BUFFER, this.type);
     }
 
-    this.buffers.colors.addData(data, 4);
+    var offset = this.buffers.colors.addData(data, 4);
     this.buffers.colors.setAttribute("in_color");
+    return offset;
 };
 
 zogl.zBufferSet.prototype.addTexCoords = function(data) {
@@ -50,8 +54,9 @@ zogl.zBufferSet.prototype.addTexCoords = function(data) {
         this.buffers.texcoords = new zogl.zBuffer(gl.ARRAY_BUFFER, this.type);
     }
 
-    this.buffers.texcoords.addData(data, 2);
+    var offset = this.buffers.texcoords.addData(data, 2);
     this.buffers.texcoords.setAttribute("in_texc");
+    return offset;
 };
 
 zogl.zBufferSet.prototype.bind = function() {

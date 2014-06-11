@@ -18,6 +18,8 @@ zogl.zBuffer.prototype.addData = function(bufferdata, eachElem) {
         return false;
     }
 
+    var offset = this.data == null ? 0 : this.data.length;
+
     // we are adding data
     if (this.data) {
         var copy = new this.dataType(this.data.length + bufferdata.length);
@@ -27,7 +29,7 @@ zogl.zBuffer.prototype.addData = function(bufferdata, eachElem) {
         }
 
         for(var i in bufferdata) {
-            copy[i + this.data.length] = bufferdata[i];
+            copy[parseInt(i) + offset] = bufferdata[i];
         }
 
         this.data = copy;
@@ -38,7 +40,7 @@ zogl.zBuffer.prototype.addData = function(bufferdata, eachElem) {
     }
 
     this.itemSize = eachElem;
-    return this.data.length;
+    return offset;
 };
 
 zogl.zBuffer.prototype.offload = function() {
