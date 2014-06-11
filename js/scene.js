@@ -100,9 +100,9 @@ zogl.zScene.prototype.draw = function(color) {
     glGlobals.defaultShader.unbind();
 };
 
-zogl.zScene.prototype.addObject = function(type) {
+zogl.zScene.prototype.addObject = function(type, args) {
     type = type || zogl.zSprite;
-    var z = new type();
+    var z = new type(args);
     this.objects.push(z);
     return z;
 };
