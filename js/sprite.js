@@ -35,13 +35,17 @@ zogl.zSprite.prototype.addObject = function(obj, x, y) {
     tmp.move(x || 0, y || 0);
     this.prims.push(tmp);
 
-    this.rect.w = Math.max(this.rect.w, obj.calcWidth()  + x);
-    this.rect.h = Math.max(this.rect.h, obj.calcHeight() + y);
+    this.rect.w = Math.max(this.rect.w, obj.calcWidth()  + (x || 0));
+    this.rect.h = Math.max(this.rect.h, obj.calcHeight() + (y || 0));
 };
 
 zogl.zSprite.prototype.move = function(x, y) {
     mat4.translate(this.mv, vec3.create(x, y, 0));
     this.rect.x = x; this.rect.y = y;
+};
+
+zogl.zSprite.prototype.adjust = function(dx, dy) {
+    this.move(this.rect.x + dx, this.rect.y + dy);
 };
 
 zogl.zSprite.prototype.addPass = function(shader) {
@@ -186,9 +190,10 @@ zogl.zSprite.prototype._drawPrims = function(ready, shader) {
 };
 
 zogl.zSprite.prototype.collides = function(x, y) {
-    if (x instanceof zogl.rect) {
+    if (x.constructor == zogl.rect) {
         return this.rect.collideRect(x);
-    } else if (x instanceof zogl.zSprite) {
+    } else if (x.constructor == zogl.zSprite) {
+        log('spr');
         return this.rect.collideRect(x.rect);
     }
 
