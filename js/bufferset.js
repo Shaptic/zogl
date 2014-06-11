@@ -8,7 +8,6 @@ zogl.zBufferSet.prototype.addData = function(data) {
     var offset = this.addIndices(data.indices);
     this.addColors(data.colors);
     this.addTexCoords(data.texcoords);
-    log(this.buffers);
     return offset;
 }
 

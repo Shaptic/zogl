@@ -35,12 +35,8 @@ zogl.zSprite.prototype.addObject = function(obj, x, y) {
     tmp.move(x || 0, y || 0);
     this.prims.push(tmp);
 
-    log(this.rect);
-
     this.rect.w = Math.max(this.rect.w, obj.calcWidth()  + x);
     this.rect.h = Math.max(this.rect.h, obj.calcHeight() + y);
-
-    log(this.rect);
 };
 
 zogl.zSprite.prototype.move = function(x, y) {
