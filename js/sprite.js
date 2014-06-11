@@ -12,8 +12,9 @@ zogl.zSprite = function() {
 
 zogl.zSprite.prototype.loadFromTexture = function(texture) {
     if (typeof texture == "string") {
+        var fn = texture;
         texture = new zogl.zTexture();
-        texture.loadFromFile(texture);
+        texture.loadFromFile(fn);
     }
 
     this.rect.w = texture.size.w;
