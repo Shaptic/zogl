@@ -1,4 +1,8 @@
 function init() {
+    var preventer = function(e) {
+        e.preventDefault();
+    };
+    
     var w = new zogl.zWindow(800, 600);
     w.init();
 
@@ -73,10 +77,10 @@ function init() {
 
     var q = new zogl.zQuad();
     q.resize(64, 64);
-    //q.attachTexture(tx);
+    q.attachTexture(tx);
     q.create();
 
-    var scene = new zogl.zScene(0, 0, { "lighting": false });
+    var scene = new zogl.zScene(0, 0, { "lighting": true });
     var sceneSprite = scene.addObject();
     sceneSprite.loadFromTexture(texture);
     //sceneSprite.addObject(q);                   // <-- problem here; can't handle > 1 object
@@ -88,28 +92,33 @@ function init() {
 
     var amb = scene.addLight(zogl.LightType.AMBIENT);
     amb.setBrightness(0.1);
-    amb.setColor(new zogl.color4('#FFFFFF'));
+    amb.setColor('#FFFFFF');
     amb.update();
 
     var light = scene.addLight(zogl.LightType.POINT);
-    light.setBrightness(1.5);
+    light.setBrightness(1.0);
     light.setPosition(100, 100);
-    light.setColor(new zogl.color4('#FFFFFF'));
+    light.setColor('#FFFFFF');
     light.update();
 
-    document.onmousemove = function(evt) {
+    updater = function(evt) {
         var pos = zogl.getMousePosition(evt);
         light.setPosition(pos.x, pos.y);
-        light.update();
-
-        console.log(pos.x, pos.y, sceneSprite.rect);
 
         if (sceneSprite.collides(pos.x, pos.y)) {
-            sceneSprite.move(100, 100);
+            light.setColor('#FF0000');
         } else {
-            sceneSprite.move(0, 0);
+            light.setColor('#FF00FF');
         }
+
+        light.update();
     };
+
+    if (window.navigator.msPointerEnabled) {
+        glGlobals.canvas.addEventListener("MSPointerMove", updater, false);
+    } else {
+        glGlobals.canvas.addEventListener("mousemove", updater, false);
+    }
 
     var game = function() {
         w.clear('#FFFFFF');
