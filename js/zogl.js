@@ -197,6 +197,11 @@ zogl.init = function(canvas) {
     mat4.identity(glGlobals.mv);
     mat4.ortho(0, canvas.width, canvas.height, 0, 1.0, 10.0, glGlobals.proj);
 
+    // prevent context menu
+    glGlobals.canvas.oncontextmenu = function(event) {
+        event.preventDefault();
+    };
+
     return true;
 };
 
