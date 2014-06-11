@@ -1,21 +1,8 @@
 zogl.zQuad = function(width, height) {
     zogl.zPolygon.call(this);
-    this.size = {
-        'w': width  || 0,
-        'h': height || 0
-    };
 }
 zogl.zQuad.prototype = new zogl.zPolygon();
 zogl.zQuad.prototype.constructor = zogl.zQuad;
-
-zogl.zQuad.prototype.clone = function() {
-    var copy = zogl.zPolygon.prototype.clone.call(this);
-    copy.size = {
-        'w': this.size.w,
-        'h': this.size.h
-    };
-    return copy;
-};
 
 zogl.zQuad.prototype.create = function() {
     this.loadVerts();

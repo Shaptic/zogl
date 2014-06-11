@@ -157,7 +157,7 @@ zogl.zPolygon.prototype.offload = function(vao, flags) {
     this.offset = vao.addData(this.drawData);
     this.vao = vao;
 
-    if (flags && !flags.preserve) {
+    if (flags && flags.preserve == false) {
         delete this.drawData.positions;
         delete this.drawData.indices;
         delete this.drawData.colors;
