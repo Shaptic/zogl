@@ -1,5 +1,6 @@
 zogl.zQuad = function(width, height) {
     zogl.zPolygon.call(this);
+    this.resize(width, height);
 }
 zogl.zQuad.prototype = new zogl.zPolygon();
 zogl.zQuad.prototype.constructor = zogl.zQuad;
