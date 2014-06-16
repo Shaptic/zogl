@@ -3,6 +3,7 @@ zogl.zSprite = function() {
     this.prims = [];
     this.passes = [];
     this.mv = mat4.create();
+    this.enabled = true;
     this.flags = {
         'blend': false
     }
@@ -54,6 +55,8 @@ zogl.zSprite.prototype.addPass = function(shader) {
 };
 
 zogl.zSprite.prototype.draw = function(ready) {
+    if (!this.enabled) return;
+
     if (this.passes.length == 0) {
         this._drawPrims(ready);
         return;
@@ -194,7 +197,6 @@ zogl.zSprite.prototype.collides = function(x, y) {
     if (x.constructor == zogl.rect) {
         return this.rect.collideRect(x);
     } else if (x.constructor == zogl.zSprite) {
-        log('spr');
         return this.rect.collideRect(x.rect);
     }
 
@@ -207,4 +209,12 @@ zogl.zSprite.prototype.getX = function() {
 
 zogl.zSprite.prototype.getY = function() {
     return this.rect.y;
+};
+
+zogl.zSprite.prototype.enable = function() {
+    this.enabled = true;
+};
+
+zogl.zSprite.prototype.disable = function() {
+    this.enabled = false;
 };
