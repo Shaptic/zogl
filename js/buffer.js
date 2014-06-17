@@ -7,7 +7,7 @@ zogl.zBuffer = function(buffertype, drawtype, type) {
     this.size       = 0;
     this.itemSize   = 0;
     this.dataType   = type || Float32Array;
-    this.data       = null;
+    this.data       = [];
     this.buffer     = gl.createBuffer();
 };
 
@@ -18,18 +18,18 @@ zogl.zBuffer.prototype.addData = function(bufferdata, eachElem) {
         return false;
     }
 
-    var offset = this.data == null ? 0 : this.data.length;
+    var offset = this.data.length;
 
     // we are adding data
-    if (this.data) {
+    if (this.data.length > 0) {
         var copy = new this.dataType(this.data.length + bufferdata.length);
 
         for (var i in this.data) {
             copy[i] = this.data[i];
         }
 
-        for(var i in bufferdata) {
-            copy[parseInt(i) + offset] = bufferdata[i];
+        for(var i = 0; i < bufferdata.length; ++i) {
+            copy[i + offset] = bufferdata[i];
         }
 
         this.data = copy;
@@ -49,7 +49,7 @@ zogl.zBuffer.prototype.offload = function() {
     this.bind();
     gl.bufferData(this.bufferType, this.data, this.drawType);
     this.size = this.data.length;
-    this.data = null;
+    this.data = [];
     this.unbind();
 };
 

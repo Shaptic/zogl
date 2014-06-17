@@ -4,8 +4,8 @@ zogl.zBufferSet = function(type) {
 };
 
 zogl.zBufferSet.prototype.addData = function(data) {
-    this.addPositions(data.positions);
     var offset = this.addIndices(data.indices);
+    this.addPositions(data.positions);
     this.addColors(data.colors);
     this.addTexCoords(data.texcoords);
     return offset;
@@ -29,6 +29,15 @@ zogl.zBufferSet.prototype.addIndices = function(data) {
     if (!('posIndex' in this.buffers)) {
         this.buffers.posIndex = new zogl.zBuffer(gl.ELEMENT_ARRAY_BUFFER,
                                                  this.type, Uint16Array);
+    }
+
+    // divided by 2 because 2 floats per vert so the true count is size / 2.
+    var offset = ('positions' in this.buffers        ?
+                  this.buffers.positions.size +
+                  this.buffers.positions.data.length : 0) / 2;
+
+    for (var i in data) {
+        data[i] += offset;
     }
 
     return this.buffers.posIndex.addData(data, 1);

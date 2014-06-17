@@ -134,7 +134,7 @@ zogl.zPolygon.prototype.draw = function(ready, shader) {
     glGlobals.activeShader.setParameterMat("proj", glGlobals.proj);
 
     gl.drawElements(gl.TRIANGLES, this.drawData.icount,
-                    gl.UNSIGNED_SHORT, this.offset);
+                    gl.UNSIGNED_SHORT, (new Uint16Array).BYTES_PER_ELEMENT * this.offset);
 };
 
 zogl.zPolygon.prototype.setColor = function(col) {
@@ -204,7 +204,7 @@ zogl.zPolygon.prototype.calcHeight = function() {
     var set = this.verts.length == 0 ? this.drawData.positions : this.verts;
 
     var mh = 0;
-    for (var i = 0; i < set.length; i += 2) {
+    for (var i = 1; i < set.length; i += 2) {
         mh = Math.max(mh, set[i]);
     }
     this.size.h = mh;

@@ -15,14 +15,14 @@ zogl.zScene = function(w, h, options) {
     this.objects = [];
 
     this.fullscreen = new zogl.zBufferSet();
+    this.fullscreen.addIndices(new Uint16Array([
+        0, 1, 3, 3, 1, 2
+    ]));
     this.fullscreen.addPositions(new Float32Array([
         0,              0,
         this.size.w,    0,
         this.size.w,    this.size.h,
         0,              this.size.h
-    ]));
-    this.fullscreen.addIndices(new Uint16Array([
-        0, 1, 3, 3, 1, 2
     ]));
     this.fullscreen.addColors(new Float32Array([
         1, 1, 1, 1,
