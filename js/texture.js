@@ -1,4 +1,16 @@
-zogl = zogl || {};
+// Ripped from
+// http://www.khronos.org/webgl/wiki/WebGL_and_OpenGL_Differences#Non-Power_of_Two_Texture_Support
+function isPowerOfTwo(x) {
+    return (x & (x - 1)) == 0;
+}
+
+function nextHighestPowerOfTwo(x) {
+    --x;
+    for (var i = 1; i < 32; i <<= 1) {
+        x = x | x >> i;
+    }
+    return x + 1;
+}
 
 zogl.zTexture = function() {
     this.id = 0;
@@ -7,7 +19,10 @@ zogl.zTexture = function() {
         'w': 0,
         'h': 0
     };
-    this.loaded = false;
+    this.attribs = {
+        "loaded": false,
+        "repeat": false
+    };
     this.resetOnload();
 };
 
@@ -63,7 +78,7 @@ zogl.zTexture.prototype.unbind = function() {
 zogl.zTexture.prototype.setOnload = function(fn) {
     // If we're already loaded, there's no need to set a true callback,
     // just execute immediately.
-    if (this.loaded) {
+    if (this.attribs.loaded) {
         fn();
     }
 
@@ -83,6 +98,38 @@ zogl.zTexture.prototype.resetOnload = function() {
     var that = this;
     this.callback = function(texture) {
         that.loadFromRaw(that.id.image, true);
-        that.loaded = true;
+        that.attribs.loaded = true;
     };
 };
+
+zogl.zTexture.prototype.setRepeating = function(flag) {
+    if (this.attribs.repeat == flag) return;
+
+    // Reload the texture as a Power-of-Two
+    if (flag) {
+
+        if (this.filename == "raw data") {
+            throw("Can't POT raw textures.");
+            return;
+        }
+
+        if (!isPowerOfTwo(this.id.image.width) ||
+            !isPowerOfTwo(this.id.image.height)) {
+            // Scale up the texture to the next highest power of two dimensions.
+            var canvas = document.createElement("canvas");
+            canvas.style.display = "hidden";
+            canvas.width  = nextHighestPowerOfTwo(image.width);
+            canvas.height = nextHighestPowerOfTwo(image.height);
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(image, 0, 0, image.width, image.height);
+            image = canvas;
+        }
+
+        this.loadFromRaw(this.id.image);
+        this.bind();
+        gl.generateMipmap(gl.TEXTURE_2D);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        this.unbind();
+    }
+}

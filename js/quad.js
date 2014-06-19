@@ -1,6 +1,9 @@
 zogl.zQuad = function(width, height) {
     zogl.zPolygon.call(this);
     this.resize(width, height);
+    this.attribs = {
+        "repeat": false
+    };
 }
 zogl.zQuad.prototype = new zogl.zPolygon();
 zogl.zQuad.prototype.constructor = zogl.zQuad;
@@ -48,11 +51,25 @@ zogl.zQuad.prototype.loadVerts = function() {
 };
 
 zogl.zQuad.prototype.loadTexCoords = function() {
+    var tcw = 1;
+    var tch = 1;
+
+    if (this.attribs.repeat) {
+        this.texture.setRepeating(true);
+        tcw = this.size.w / this.texture.size.w;
+        tch = this.size.h / this.texture.size.h;
+
+        log(this.size);
+        log(this.texture.size);
+
+        log('width', tcw, 'height', tch);
+    }
+
     this.drawData.texcoords = new Float32Array([
-        0, 1,
-        1, 1,
-        1, 0,
-        0, 0
+        0,      tch,
+        tcw,    tch,
+        tcw,    0,
+        0,      0
     ]);
 };
 
