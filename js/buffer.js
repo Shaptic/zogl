@@ -11,7 +11,6 @@ zogl.zBuffer = function(buffertype, drawtype, type) {
     this.buffer     = gl.createBuffer();
 };
 
-
 zogl.zBuffer.prototype.addData = function(bufferdata, eachElem) {
     if (this.size) {
         throw('.offload() has been called, you can no longer add data to this buffer.')
