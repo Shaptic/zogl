@@ -107,6 +107,15 @@ zogl.zScene.prototype.addObject = function(type, args) {
     return z;
 };
 
+zogl.zScene.prototype.removeObject = function(obj) {
+    for (var i = this.objects.length - 1; i >= 0; --i) {
+        if (this.objects[i] === obj) {
+            this.objects.splice(i, 1);
+            return;
+        }
+    }
+};
+
 zogl.zScene.prototype.addLight = function(type) {
     var z = new zogl.zLight(type);
     this.lights.push(z);
