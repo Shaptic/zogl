@@ -16,6 +16,7 @@ zogl.zPolygon = function() {
 
     this.x = 0;
     this.y = 0;
+    this.angle = 0;
 
     this.shader  = glGlobals.defaultShader;
     this.texture = glGlobals.defaultTexture;
@@ -58,6 +59,10 @@ zogl.zPolygon.prototype.clone = function() {
 zogl.zPolygon.prototype.move = function(x, y) {
     this.x = x;
     this.y = y;
+};
+
+zogl.zPolygon.prototype.rotate = function(rads) {
+    this.angle = rads;
 };
 
 zogl.zPolygon.prototype.addVertex = function(x, y) {
@@ -129,6 +134,7 @@ zogl.zPolygon.prototype.draw = function(ready, shader) {
 
     mat4.identity(this.mv);
     mat4.translate(this.mv, [this.x, this.y, 0]);
+    mat4.rotate(this.mv, this.angle, [0, 0, 1]);
 
     glGlobals.activeShader.setParameterMat("mv", this.mv);
     glGlobals.activeShader.setParameterMat("proj", glGlobals.proj);

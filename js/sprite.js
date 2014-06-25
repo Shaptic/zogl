@@ -3,6 +3,7 @@ zogl.zSprite = function() {
     this.prims = [];
     this.passes = [];
     this.mv = mat4.create();
+    this.angle = 0;
     this.enabled = true;
     this.flags = {
         'blend': false
@@ -45,6 +46,11 @@ zogl.zSprite.prototype.move = function(x, y) {
     mat4.translate(this.mv, vec3.create(x, y, 0));
     this.rect.x = x; this.rect.y = y;
 };
+
+zogl.zSprite.prototype.rotate = function(rads) {
+    mat4.rotate(this.mv, rads, [0, 0, 1]);
+    this.angle = rads;
+}
 
 zogl.zSprite.prototype.adjust = function(dx, dy) {
     this.move(this.rect.x + dx, this.rect.y + dy);
@@ -176,6 +182,7 @@ zogl.zSprite.prototype._drawPrims = function(ready, shader) {
 
         this.prims[i].move(this.getX() + pos[0],
                            this.getY() + pos[1]);
+        this.prims[i].rotate(this.angle);
 
         if (shader !== undefined) {
             shader.bind();
