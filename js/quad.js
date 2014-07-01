@@ -56,13 +56,9 @@ zogl.zQuad.prototype.loadTexCoords = function() {
 
     if (this.attribs.repeat) {
         this.texture.setRepeating(true);
+
         tcw = this.size.w / this.texture.size.w;
         tch = this.size.h / this.texture.size.h;
-
-        log(this.size);
-        log(this.texture.size);
-
-        log('width', tcw, 'height', tch);
     }
 
     this.drawData.texcoords = new Float32Array([
