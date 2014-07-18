@@ -4,6 +4,7 @@ zogl.zFont = function() {
     this.size = 0;
     this.filename = "";
     this.node = null;
+    this.color = 'black';
 };
 
 zogl.zFont.prototype.loadFromFile = function(css, size) {
@@ -23,6 +24,7 @@ zogl.zFont.prototype.draw = function(text) {
     this.node.width  = this.node.context.measureText(text).width;
     this.node.height = this.size * 2;
     this.node.context.font = this.size + "px " + this.filename;
+    this.node.context.fillStyle = this.color;
     this.node.context.fillText(text, 0, this.size);
 
     var tx = new zogl.zTexture();
